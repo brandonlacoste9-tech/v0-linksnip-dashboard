@@ -93,7 +93,7 @@ export default function DashboardPage() {
   }
 
   const copyToClipboard = (code: string) => {
-    navigator.clipboard.writeText(\`linksnip.io/\${code}\`)
+    navigator.clipboard.writeText(`linksnip.io/${code}`)
     toast.success("Copied to clipboard!")
   }
 
@@ -105,8 +105,8 @@ export default function DashboardPage() {
     const headers = ["Destination URL", "Short Code", "Clicks", "Date Created"]
     const csvContent = [
       headers.join(","),
-      ...links.map(link => \`"\${link.original_url}","\${link.short_code}",\${link.clicks},"\${new Date(link.created_at).toISOString()}"\`)
-    ].join("\\n")
+      ...links.map(link => `"${link.original_url}","${link.short_code}",${link.clicks},"${new Date(link.created_at).toISOString()}"`)
+    ].join("\n")
     
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
     const url = URL.createObjectURL(blob)
@@ -248,7 +248,7 @@ export default function DashboardPage() {
                           <div className="flex items-center gap-3">
                             <div className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center p-1 border border-neutral-700/50 shrink-0">
                               <img 
-                                src={\`https://www.google.com/s2/favicons?domain=\${link.original_url}&sz=64\`} 
+                                src={`https://www.google.com/s2/favicons?domain=${link.original_url}&sz=64`} 
                                 className="w-full h-full rounded-full object-cover"
                                 alt="icon"
                                 onError={(e) => (e.currentTarget.src = "https://linksnip.io/globe-fallback.png")}
@@ -312,12 +312,12 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <style dangerouslySetInnerHTML={{__html: \`
+      <style dangerouslySetInnerHTML={{__html: `
         .custom-scrollbar::-webkit-scrollbar { width: 8px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #444; }
-      \`}} />
+      `}} />
     </div>
   )
 }
