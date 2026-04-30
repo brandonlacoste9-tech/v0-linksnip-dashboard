@@ -1,9 +1,12 @@
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignInButton, UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { ArrowRight, Link2, Shield, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const { userId } = await auth();
+
   return (
     <div className="min-h-screen bg-black text-white selection:bg-amber-500/30">
       {/* Navigation */}
@@ -16,16 +19,16 @@ export default function LandingPage() {
             <span className="font-bold text-xl tracking-wider text-amber-50">LINKSNIP</span>
           </div>
           <div className="flex items-center gap-4">
-            <SignedOut>
+            {!userId && (
               <SignInButton mode="modal">
                 <Button variant="ghost" className="text-amber-100 hover:text-amber-400 hover:bg-amber-950/50">
                   Sign In
                 </Button>
               </SignInButton>
-            </SignedOut>
-            <SignedIn>
+            )}
+            {userId && (
               <UserButton afterSignOutUrl="/" />
-            </SignedIn>
+            )}
           </div>
         </div>
       </nav>
@@ -56,22 +59,22 @@ export default function LandingPage() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
             {/* Clerk Access Button */}
-            <SignedOut>
+            {!userId && (
               <SignInButton mode="modal">
                 <Button size="lg" className="h-14 px-8 text-lg bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white border-0 shadow-[0_0_40px_-10px_rgba(245,158,11,0.5)] transition-all">
                   Access Dashboard
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </SignInButton>
-            </SignedOut>
-            <SignedIn>
+            )}
+            {userId && (
               <Button size="lg" className="h-14 px-8 text-lg bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white border-0 shadow-[0_0_40px_-10px_rgba(245,158,11,0.5)] transition-all" asChild>
                 <Link href="/dashboard">
                   Access Dashboard
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Link>
               </Button>
-            </SignedIn>
+            )}
             
             {/* Stripe Payment CTA */}
             <Button size="lg" variant="outline" className="h-14 px-8 text-lg border-white/20 hover:bg-white/5" asChild>
