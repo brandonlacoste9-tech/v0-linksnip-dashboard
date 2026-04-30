@@ -179,7 +179,7 @@ export default async function LandingPage() {
                   </h2>
                   
                   <p className="text-zinc-400 leading-relaxed text-lg">
-                    Your link infrastructure is mathematically sealed. Unlike public shorteners that pool your data with millions of others, your instance runs on an isolated Neon PostgreSQL database protected by Clerk&apos;s edge-middleware. Only you and your authorized team can access the dashboard. Fully Loi 25 compliant.
+                    Your link infrastructure is mathematically sealed. Unlike public shorteners that pool your data with millions of others, your instance runs on an isolated Neon PostgreSQL database protected by Clerk&apos;s edge-middleware. Only you and your authorized team can access the dashboard. Enterprise-grade security, built for SOC2 and GDPR compliance.
                   </p>
                 </div>
               </div>
