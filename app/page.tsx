@@ -1,7 +1,7 @@
 import { SignInButton, UserButton } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
-import { ArrowRight, Link2, Shield, Zap, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Link2, Shield, Zap, CheckCircle2, Lock, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default async function LandingPage() {
@@ -156,6 +156,51 @@ export default async function LandingPage() {
                       Secure Your Instance
                     </a>
                   </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* The Sovereign Vault — Feature Section */}
+          <div className="mx-auto max-w-6xl mb-20">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Left Column — The Lock */}
+              <div className="rounded-3xl border border-amber-500/20 bg-black/50 backdrop-blur-xl p-10 relative overflow-hidden group hover:border-amber-500/40 transition-all duration-500">
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
+                <div className="absolute -top-20 -right-20 w-56 h-56 bg-amber-500/10 rounded-full blur-[80px] group-hover:bg-amber-500/20 transition-all duration-700" />
+                
+                <div className="relative z-10">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-700/20 border border-amber-500/30 flex items-center justify-center mb-8 shadow-[0_0_30px_-5px_rgba(245,158,11,0.3)] group-hover:shadow-[0_0_40px_-5px_rgba(245,158,11,0.5)] transition-all duration-500">
+                    <Lock className="w-8 h-8 text-amber-400" />
+                  </div>
+                  
+                  <h2 className="text-3xl font-bold text-white tracking-tight mb-6">
+                    The Sovereign Vault
+                  </h2>
+                  
+                  <p className="text-zinc-400 leading-relaxed text-lg">
+                    Your link infrastructure is mathematically sealed. Unlike public shorteners that pool your data with millions of others, your instance runs on an isolated Neon PostgreSQL database protected by Clerk&apos;s edge-middleware. Only you and your authorized team can access the dashboard. Fully Loi 25 compliant.
+                  </p>
+                </div>
+              </div>
+
+              {/* Right Column — The Economics */}
+              <div className="rounded-3xl border border-amber-500/20 bg-black/50 backdrop-blur-xl p-10 relative overflow-hidden group hover:border-amber-500/40 transition-all duration-500">
+                <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
+                <div className="absolute -bottom-20 -left-20 w-56 h-56 bg-amber-500/10 rounded-full blur-[80px] group-hover:bg-amber-500/20 transition-all duration-700" />
+                
+                <div className="relative z-10">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-amber-700/20 border border-amber-500/30 flex items-center justify-center mb-8 shadow-[0_0_30px_-5px_rgba(245,158,11,0.3)] group-hover:shadow-[0_0_40px_-5px_rgba(245,158,11,0.5)] transition-all duration-500">
+                    <TrendingUp className="w-8 h-8 text-amber-400" />
+                  </div>
+                  
+                  <h2 className="text-3xl font-bold text-white tracking-tight mb-6">
+                    Instant ROI. Zero Leases.
+                  </h2>
+                  
+                  <p className="text-zinc-400 leading-relaxed text-lg">
+                    Enterprise plans at Bitly or Rebrandly cost upwards of $300 to $500 a month the second you need custom domains and team access. Over two years, you are burning $10,000+ just to redirect links. By owning your infrastructure for a flat $999, your investment pays for itself in under 90 days. You own the asset, forever.
+                  </p>
                 </div>
               </div>
             </div>
