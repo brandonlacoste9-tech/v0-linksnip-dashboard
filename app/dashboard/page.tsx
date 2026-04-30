@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { 
   Plus, Copy, MoreVertical, BarChart3, Settings, 
   LayoutDashboard, Link2, Search, Menu, Wand2, 
-  ExternalLink, Trash2, TrendingUp, User, Globe
+  ExternalLink, Trash2, TrendingUp, User, Globe, Download
 } from "lucide-react"
 import { toast } from "sonner"
 
@@ -27,14 +27,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { createLink, getLinks } from "@/app/actions"
-
-export interface Link {
-  id: string
-  original_url: string
-  short_code: string
-  clicks: number
-  created_at: string
-}
+import type { Link } from "@/app/actions"
 
 export default function LinkSnipDashboard() {
   const [loading, setLoading] = useState(true)
@@ -114,6 +107,31 @@ export default function LinkSnipDashboard() {
     toast.success("Copied to clipboard!")
   }
 
+  const handleExportCSV = () => {
+    if (links.length === 0) {
+      toast.error("No links to export")
+      return
+    }
+    
+    const headers = ["ID", "Original URL", "Short Code", "Clicks", "Created At"]
+    const csvContent = [
+      headers.join(","),
+      ...links.map(link => 
+        `${link.id},"${link.original_url}","${link.short_code}",${link.clicks},"${new Date(link.created_at).toISOString()}"`
+      )
+    ].join("\n")
+    
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+    const url = URL.createObjectURL(blob)
+    const anchor = document.createElement("a")
+    anchor.setAttribute("href", url)
+    anchor.setAttribute("download", "linksnip-analytics.csv")
+    document.body.appendChild(anchor)
+    anchor.click()
+    document.body.removeChild(anchor)
+    toast.success("CSV Exported successfully!")
+  }
+
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden font-sans text-zinc-900">
       {/* Sidebar Desktop */}
@@ -145,7 +163,12 @@ export default function LinkSnipDashboard() {
             />
           </div>
 
-          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={handleExportCSV}>
+              <Download className="w-4 h-4 mr-2" />
+              Download CSV
+            </Button>
+            <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
               <Button className="bg-blue-600 hover:bg-blue-700"><Plus className="w-4 h-4 mr-2" /> Create Link</Button>
             </DialogTrigger>
@@ -172,7 +195,8 @@ export default function LinkSnipDashboard() {
                 <DialogFooter><Button type="submit" className="w-full bg-blue-600" disabled={isSubmitting}>{isSubmitting ? "Creating..." : "Create Link"}</Button></DialogFooter>
               </form>
             </DialogContent>
-          </Dialog>
+            </Dialog>
+          </div>
         </header>
 
         {/* Dashboard Area */}
