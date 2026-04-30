@@ -96,6 +96,29 @@ export default async function LandingPage() {
             </div>
           </div>
 
+          {/* Trusted By / Logo Cloud */}
+          <div className="mb-24">
+            <p className="text-center text-zinc-500 text-sm font-medium uppercase tracking-widest mb-10">
+              Trusted by innovative enterprises
+            </p>
+            <div className="flex flex-wrap justify-center items-center gap-10 sm:gap-16 opacity-60">
+              <div className="flex items-center gap-2 text-2xl font-bold text-zinc-300 hover:text-white transition-colors duration-300">
+                <Zap className="w-8 h-8 text-amber-500" /> Quantum
+              </div>
+              <div className="flex items-center gap-2 text-2xl font-bold text-zinc-300 hover:text-white transition-colors duration-300">
+                <Shield className="w-8 h-8 text-amber-500" /> GuardianTech
+              </div>
+              <div className="flex items-center gap-2 text-2xl font-bold text-zinc-300 hover:text-white transition-colors duration-300">
+                <svg className="w-8 h-8 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                Starlight
+              </div>
+              <div className="flex items-center gap-2 text-2xl font-bold text-zinc-300 hover:text-white transition-colors duration-300">
+                <svg className="w-8 h-8 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Apex
+              </div>
+            </div>
+          </div>
+
           {/* Pricing / Value Block */}
           <div className="mx-auto max-w-4xl mb-20 text-left">
             <div className="rounded-3xl border border-amber-500/30 bg-black/60 backdrop-blur-xl p-8 sm:p-12 shadow-[0_0_50px_-12px_rgba(245,158,11,0.2)] relative overflow-hidden">
@@ -140,6 +163,70 @@ export default async function LandingPage() {
 
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-white/5 bg-black/60 pt-16 pb-8 px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+          <div className="space-y-6">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center">
+                <Link2 className="w-5 h-5 text-black" />
+              </div>
+              <span className="font-bold text-xl tracking-wider text-amber-50">LINKSNIP</span>
+            </div>
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              Empowering enterprises with sovereign URL management infrastructure. Built for performance, security, and total data ownership.
+            </p>
+            <div className="text-zinc-500 text-sm space-y-1">
+              <p className="font-semibold text-zinc-300">LinkSnip Technologies</p>
+              <p>100 Innovation Way, Suite 400</p>
+              <p>San Francisco, CA 94105</p>
+              <p className="pt-2 hover:text-amber-400 transition-colors"><a href="mailto:contact@linksnip.com">contact@linksnip.com</a></p>
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-white font-semibold mb-6">Platform</h3>
+            <ul className="space-y-3 text-sm text-zinc-400">
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">Features</Link></li>
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">Analytics</Link></li>
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">Custom Domains</Link></li>
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">Security (Loi 25)</Link></li>
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">Pricing</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-white font-semibold mb-6">Company</h3>
+            <ul className="space-y-3 text-sm text-zinc-400">
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">About Us</Link></li>
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">Customers</Link></li>
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">Careers</Link></li>
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">Blog</Link></li>
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">Contact</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-white font-semibold mb-6">Legal</h3>
+            <ul className="space-y-3 text-sm text-zinc-400">
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">Privacy Policy</Link></li>
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">Terms of Service</Link></li>
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">Data Processing Agreement</Link></li>
+              <li><Link href="#" className="hover:text-amber-400 transition-colors">Cookie Policy</Link></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="max-w-7xl mx-auto pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-600">
+          <p>&copy; {new Date().getFullYear()} LinkSnip Technologies. All rights reserved.</p>
+          <div className="flex gap-6">
+            <Link href="#" className="hover:text-amber-500 transition-colors">Twitter</Link>
+            <Link href="#" className="hover:text-amber-500 transition-colors">LinkedIn</Link>
+            <Link href="#" className="hover:text-amber-500 transition-colors">GitHub</Link>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
