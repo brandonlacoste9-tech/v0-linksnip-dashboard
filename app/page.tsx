@@ -188,32 +188,32 @@ export default async function LandingPage() {
           <div>
             <h3 className="text-white font-semibold mb-6">Platform</h3>
             <ul className="space-y-3 text-sm text-zinc-400">
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">Features</Link></li>
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">Analytics</Link></li>
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">Custom Domains</Link></li>
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">Security (Loi 25)</Link></li>
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">Pricing</Link></li>
+              <li><Link href="/features" className="hover:text-amber-400 transition-colors">Features</Link></li>
+              <li><Link href="/analytics" className="hover:text-amber-400 transition-colors">Analytics</Link></li>
+              <li><Link href="/domains" className="hover:text-amber-400 transition-colors">Custom Domains</Link></li>
+              <li><Link href="/security" className="hover:text-amber-400 transition-colors">Security (Loi 25)</Link></li>
+              <li><Link href="/pricing" className="hover:text-amber-400 transition-colors">Pricing</Link></li>
             </ul>
           </div>
 
           <div>
             <h3 className="text-white font-semibold mb-6">Company</h3>
             <ul className="space-y-3 text-sm text-zinc-400">
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">About Us</Link></li>
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">Customers</Link></li>
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">Careers</Link></li>
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">Blog</Link></li>
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">Contact</Link></li>
+              <li><Link href="/about" className="hover:text-amber-400 transition-colors">About Us</Link></li>
+              <li><Link href="/customers" className="hover:text-amber-400 transition-colors">Customers</Link></li>
+              <li><Link href="/careers" className="hover:text-amber-400 transition-colors">Careers</Link></li>
+              <li><Link href="/blog" className="hover:text-amber-400 transition-colors">Blog</Link></li>
+              <li><Link href="/contact" className="hover:text-amber-400 transition-colors">Contact</Link></li>
             </ul>
           </div>
 
           <div>
             <h3 className="text-white font-semibold mb-6">Legal</h3>
             <ul className="space-y-3 text-sm text-zinc-400">
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">Privacy Policy</Link></li>
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">Terms of Service</Link></li>
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">Data Processing Agreement</Link></li>
-              <li><Link href="#" className="hover:text-amber-400 transition-colors">Cookie Policy</Link></li>
+              <li><Link href="/privacy" className="hover:text-amber-400 transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="hover:text-amber-400 transition-colors">Terms of Service</Link></li>
+              <li><Link href="/dpa" className="hover:text-amber-400 transition-colors">Data Processing Agreement</Link></li>
+              <li><Link href="/cookie-policy" className="hover:text-amber-400 transition-colors">Cookie Policy</Link></li>
             </ul>
           </div>
         </div>
@@ -221,9 +221,9 @@ export default async function LandingPage() {
         <div className="max-w-7xl mx-auto pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-zinc-600">
           <p>&copy; {new Date().getFullYear()} LinkSnip Technologies. All rights reserved.</p>
           <div className="flex gap-6">
-            <Link href="#" className="hover:text-amber-500 transition-colors">Twitter</Link>
-            <Link href="#" className="hover:text-amber-500 transition-colors">LinkedIn</Link>
-            <Link href="#" className="hover:text-amber-500 transition-colors">GitHub</Link>
+            <Link href="https://twitter.com/linksnip" target="_blank" rel="noreferrer" className="hover:text-amber-500 transition-colors">Twitter</Link>
+            <Link href="https://linkedin.com/company/linksnip" target="_blank" rel="noreferrer" className="hover:text-amber-500 transition-colors">LinkedIn</Link>
+            <Link href="https://github.com/linksnip" target="_blank" rel="noreferrer" className="hover:text-amber-500 transition-colors">GitHub</Link>
           </div>
         </div>
       </footer>
