@@ -79,7 +79,7 @@ export default async function LandingPage() {
             {/* Stripe Payment CTA */}
             <Button size="lg" variant="outline" className="h-14 px-8 text-lg border-white/20 hover:bg-white/5" asChild>
               <a href="https://buy.stripe.com/3cI14maxDe0tfcqgxX1Fe0E" target="_blank" rel="noopener noreferrer">
-                Own Your Instance - $1,000
+                Own Your Instance - $999
               </a>
             </Button>
           </div>
@@ -127,7 +127,7 @@ export default async function LandingPage() {
                 
                 <div className="w-full md:w-auto flex-shrink-0 flex flex-col items-center p-8 bg-zinc-950/80 rounded-2xl border border-white/5">
                   <div className="text-amber-500 font-medium mb-2 uppercase tracking-widest text-sm">One-Time Investment</div>
-                  <div className="text-5xl font-extrabold text-white mb-6">$1,000</div>
+                  <div className="text-5xl font-extrabold text-white mb-6">$999</div>
                   <Button size="lg" className="w-full h-14 text-lg bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white border-0 shadow-[0_0_30px_-5px_rgba(245,158,11,0.4)] transition-all" asChild>
                     <a href="https://buy.stripe.com/3cI14maxDe0tfcqgxX1Fe0E" target="_blank" rel="noopener noreferrer">
                       Secure Your Instance
