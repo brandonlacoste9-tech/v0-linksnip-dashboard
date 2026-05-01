@@ -94,7 +94,7 @@ export default function DashboardPage() {
   }
 
   const copyToClipboard = (code: string) => {
-    navigator.clipboard.writeText(`linksnip.io/${code}`)
+    navigator.clipboard.writeText(`linksnip.ca/${code}`)
     toast.success("Copied to clipboard!")
   }
 
