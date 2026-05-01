@@ -5,8 +5,10 @@ import { Link2, Wand2, ArrowRight, Lock, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
+import { useI18n } from "@/lib/i18n/context"
 
 export default function TrialEngine() {
+  const { t } = useI18n();
   const [url, setUrl] = useState("")
   const [code, setCode] = useState("")
   const [trialCount, setTrialCount] = useState(0)
@@ -39,7 +41,7 @@ export default function TrialEngine() {
     setResults(prev => [{ url, code: finalCode }, ...prev])
     setUrl("")
     setCode("")
-    toast.success(`Link shortened! (${newCount}/3 free trial links used)`)
+    toast.success(`Link shortened! (${newCount}/3)`)
 
     if (newCount >= 3) {
       setTimeout(() => setShowGate(true), 1500)
@@ -53,11 +55,11 @@ export default function TrialEngine() {
         <div className="rounded-2xl border border-white/10 bg-zinc-900/60 backdrop-blur-xl p-6">
           <div className="flex items-center gap-2 mb-4">
             <Link2 className="w-5 h-5 text-amber-500" />
-            <span className="text-sm font-medium text-amber-400">Try It Free — {3 - trialCount} links remaining</span>
+            <span className="text-sm font-medium text-amber-400">{t.trial.title} — {3 - trialCount} links left</span>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
             <Input
-              placeholder="https://your-long-url.com"
+              placeholder={t.trial.placeholder}
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               className="flex-1 bg-black/50 border-white/10 text-white placeholder:text-zinc-600 rounded-xl h-12"
@@ -74,7 +76,7 @@ export default function TrialEngine() {
               </Button>
             </div>
             <Button onClick={handleShorten} className="h-12 px-6 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-semibold hover:from-amber-400 hover:to-amber-500 rounded-xl shrink-0 shadow-[0_0_20px_-5px_rgba(245,158,11,0.4)]">
-              Shorten
+              {t.trial.button}
             </Button>
           </div>
 
@@ -84,7 +86,7 @@ export default function TrialEngine() {
                 <div key={i} className="flex items-center justify-between bg-black/40 border border-white/5 rounded-lg px-4 py-2.5">
                   <span className="text-zinc-400 text-sm truncate max-w-[200px]">{r.url}</span>
                   <code className="text-amber-400 text-sm font-mono bg-amber-500/10 px-3 py-1 rounded border border-amber-500/20">
-                    linksnip.io/{r.code}
+                    linksnip.ca/{r.code}
                   </code>
                 </div>
               ))}

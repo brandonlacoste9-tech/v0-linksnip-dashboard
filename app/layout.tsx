@@ -3,6 +3,7 @@ import { Space_Grotesk, Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { ThemeProvider } from 'next-themes'
 import './globals.css'
+import { LanguageProvider } from '@/lib/i18n/context'
 
 const spaceGrotesk = Space_Grotesk({ 
   subsets: ["latin"],
@@ -102,9 +103,11 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body className={`${spaceGrotesk.variable} ${inter.variable} font-sans antialiased`}>
-          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-            {children}
-          </ThemeProvider>
+          <LanguageProvider>
+            <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+              {children}
+            </ThemeProvider>
+          </LanguageProvider>
           {process.env.NODE_ENV === 'production' && <Analytics />}
         </body>
       </html>
