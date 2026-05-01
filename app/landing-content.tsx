@@ -80,7 +80,7 @@ export default function LandingContent({ userId }: { userId: string | null }) {
                 <Link href="/dashboard" className="text-sm font-medium text-amber-100 hover:text-amber-400 transition-colors">
                   {t.nav.dashboard}
                 </Link>
-                <UserButton afterSignOutUrl="/" />
+                <UserButton />
               </div>
             )}
           </div>
