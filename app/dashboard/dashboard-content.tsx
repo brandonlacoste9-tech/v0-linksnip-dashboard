@@ -303,10 +303,23 @@ export default function DashboardPage() {
                     ))
                   ) : (
                     <TableRow>
-                      <TableCell colSpan={5} className="h-48 text-center">
-                        <div className="flex flex-col items-center justify-center text-neutral-500 gap-2">
-                          <Search className="w-8 h-8 opacity-20" />
-                          <p>No links found.</p>
+                      <TableCell colSpan={5} className="h-64 text-center">
+                        <div className="flex flex-col items-center justify-center gap-6 py-10">
+                          <div className="w-20 h-20 rounded-3xl bg-neutral-900 border border-neutral-800 flex items-center justify-center shadow-inner">
+                            <Plus className="w-10 h-10 text-neutral-700" />
+                          </div>
+                          <div className="space-y-2">
+                            <p className="text-xl font-bold text-neutral-300">Your Vault is Empty</p>
+                            <p className="text-neutral-500 text-sm max-w-xs mx-auto leading-relaxed">
+                              You haven&apos;t created any sovereign links yet. Start by shortening your first URL to activate the command center.
+                            </p>
+                          </div>
+                          <Button 
+                            onClick={() => setIsModalOpen(true)}
+                            className="bg-neutral-800 hover:bg-neutral-700 text-neutral-200 border border-neutral-700 rounded-xl px-8"
+                          >
+                            <Plus className="w-4 h-4 mr-2" /> Create First Link
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>

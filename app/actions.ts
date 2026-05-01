@@ -18,6 +18,12 @@ export async function createLink(originalUrl: string, shortCode: string): Promis
   try {
     // Validate URL format
     new URL(originalUrl)
+
+    // Simple Rate Limiting: Check if any link was created in the last 1 second
+    const recentLink = await db.select({ id: links.id }).from(links).where(sql`created_at > now() - interval '1 second'`).limit(1)
+    if (recentLink.length > 0) {
+      throw new Error('Please wait a moment before creating another link.')
+    }
     
     const result = await db.insert(links).values({
       originalUrl,

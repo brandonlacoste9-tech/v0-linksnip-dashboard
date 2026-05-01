@@ -1,35 +1,67 @@
-# v0-linksnip-dashboard
+# LinkSnip | Global Sovereign Link Infrastructure
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [v0](https://v0.app).
+![LinkSnip Banner](https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&q=80)
 
-## Built with v0
+LinkSnip is an enterprise-grade, high-ticket URL management platform designed for the "Sovereign Vault" philosophy. Unlike public link shorteners that pool user data on shared infrastructure, LinkSnip provides an **isolated, private instance** for total data ownership and security.
 
-This repository is linked to a [v0](https://v0.app) project. You can continue developing by visiting the link below -- start new chats to make changes, and v0 will push commits directly to this repo. Every merge to `main` will automatically deploy.
+## 🏛️ Architecture: The Sovereign Vault
 
-[Continue working on v0 →](https://v0.app/chat/projects/prj_HRkdTrCJgQelVbwAjCcfLrhAggJs)
+LinkSnip is built on a "Hardened Edge" stack to ensure 100% data sovereignty:
 
-## Getting Started
+- **Database**: Dedicated **Neon PostgreSQL** instances provide physical data isolation.
+- **Authentication**: **Clerk** edge-middleware manages access with biometric-ready security.
+- **Edge Runtime**: Next.js App Router deployed on Vercel's global edge network for sub-100ms redirects worldwide.
+- **Analytics**: Real-time SQL-backed engine tracking granular time-series data without third-party cookies.
 
-First, run the development server:
+## 🛡️ Security & Compliance
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+LinkSnip is engineered for global enterprise standards:
+- **Data Sovereignty**: You own the database; you own the links; you own the data.
+- **SOC2 & GDPR Ready**: Isolated tenant architecture simplifies compliance auditing.
+- **Secure Headers**: Hardened with CSP, HSTS, and X-Content-Type protections.
+- **Private Access**: Dashboard routes are strictly gated by unauthorized Clerk User IDs.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Prerequisites
+- Node.js 18+
+- pnpm / npm / yarn
+- A Neon PostgreSQL account
+- A Clerk Authentication account
 
-## Learn More
+### Installation
+1. Clone your private instance repository.
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+3. Configure your Environment Variables in `.env.local`:
+   ```env
+   DATABASE_URL=postgres://...
+   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
+   CLERK_SECRET_KEY=sk_...
+   AUTHORIZED_USER_IDS=user_...
+   ```
+4. Push the database schema:
+   ```bash
+   pnpm exec drizzle-kit push
+   ```
+5. Run the development server:
+   ```bash
+   pnpm dev
+   ```
 
-To learn more, take a look at the following resources:
+## 🌍 Global Strategy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [v0 Documentation](https://v0.app/docs) - learn about v0 and how to use it.
+LinkSnip is a polyglot platform supporting:
+- **English** (Standard)
+- **Français** (Québec & EU)
+- **Español** (LatAm & Spain)
+- **中文** (Mandarin Chinese)
 
-<a href="https://v0.app/chat/api/kiro/clone/brandonlacoste9-tech/v0-linksnip-dashboard" alt="Open in Kiro"><img src="https://pdgvvgmkdvyeydso.public.blob.vercel-storage.com/open%20in%20kiro.svg?sanitize=true" /></a>
+## ⚖️ License & Ownership
+
+LinkSnip™ is a proprietary sovereign infrastructure asset developed by **Northern Ventures / Moltbot Inc.** All rights reserved. Redistribution is strictly prohibited under the Private Instance License.
+
+---
+**Pointe-Claire, QC, Canada**
