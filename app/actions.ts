@@ -2,8 +2,9 @@
 
 import { redirect } from 'next/navigation'
 import { db } from '@/lib/db'
-import { links } from '@/lib/db/schema'
-import { eq, desc, sql } from 'drizzle-orm'
+import { links, clicks } from '@/lib/db/schema'
+import { eq, desc, sql, gte, lte } from 'drizzle-orm'
+import { headers } from 'next/headers'
 
 export interface Link {
   id: number
@@ -102,16 +103,106 @@ export async function incrementLinkClicks(code: string): Promise<boolean> {
 
 export async function handleLinkClick(code: string) {
   try {
-    // Increment the click count
+    const headersList = await headers()
+    const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip')
+    const country = headersList.get('x-vercel-ip-country') || 'Unknown'
+    const userAgent = headersList.get('user-agent')
+    const referrer = headersList.get('referer')
+
+    // Get the link first to get its ID
+    const link = await getLinkByCode(code)
+    if (!link) return
+
+    // Log the granular click
+    await db.insert(clicks).values({
+      linkId: link.id,
+      ipAddress: ip,
+      country,
+      userAgent,
+      referrer,
+    })
+
+    // Increment the total click count on the link record
     await incrementLinkClicks(code)
     
-    // Get the original URL
-    const link = await getLinkByCode(code)
-    
-    if (link && link.original_url) {
+    if (link.original_url) {
       redirect(link.original_url)
     }
   } catch (error) {
+    if ((error as any).digest?.startsWith('NEXT_REDIRECT')) {
+      throw error
+    }
     console.error('Error handling link click:', error)
+  }
+}
+
+export async function getAnalyticsData() {
+  try {
+    const now = new Date()
+    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+
+    // 1. Hourly Clicks (Last 24h)
+    const hourlyData = await db
+      .select({
+        hour: sql<string>`to_char(${clicks.timestamp}, 'HH24:00')`,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(clicks)
+      .where(gte(clicks.timestamp, twentyFourHoursAgo))
+      .groupBy(sql`to_char(${clicks.timestamp}, 'HH24:00')`)
+      .orderBy(sql`to_char(${clicks.timestamp}, 'HH24:00')`)
+
+    // 2. Weekly Clicks (Last 7d)
+    const weeklyData = await db
+      .select({
+        day: sql<string>`to_char(${clicks.timestamp}, 'Dy')`,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(clicks)
+      .where(gte(clicks.timestamp, sevenDaysAgo))
+      .groupBy(sql`to_char(${clicks.timestamp}, 'Dy')`)
+      .orderBy(sql`min(${clicks.timestamp})`)
+
+    // 3. Top Referrers
+    const referrersData = await db
+      .select({
+        source: sql<string>`COALESCE(${clicks.referrer}, 'Direct')`,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(clicks)
+      .groupBy(sql`COALESCE(${clicks.referrer}, 'Direct')`)
+      .orderBy(sql`count(*) desc`)
+      .limit(6)
+
+    // 4. Geo Distribution
+    const geoData = await db
+      .select({
+        country: sql<string>`COALESCE(${clicks.country}, 'Unknown')`,
+        count: sql<number>`count(*)::int`,
+      })
+      .from(clicks)
+      .groupBy(sql`COALESCE(${clicks.country}, 'Unknown')`)
+      .orderBy(sql`count(*) desc`)
+      .limit(6)
+
+    // 5. Totals
+    const [totals] = await db
+      .select({
+        totalClicks: sql<number>`count(*)::int`,
+        uniqueVisitors: sql<number>`count(distinct ${clicks.ipAddress})::int`,
+      })
+      .from(clicks)
+
+    return {
+      hourlyData,
+      weeklyData,
+      referrersData,
+      geoData,
+      totals: totals || { totalClicks: 0, uniqueVisitors: 0 }
+    }
+  } catch (error) {
+    console.error('Error fetching analytics data:', error)
+    throw new Error('Failed to fetch analytics data')
   }
 }
