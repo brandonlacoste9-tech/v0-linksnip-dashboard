@@ -122,25 +122,32 @@ export async function getLinks(): Promise<Link[]> {
 }
 
 export async function getLinkByCode(code: string): Promise<Link | null> {
-  try {
-    const result = await db.select().from(links).where(eq(links.shortCode, code)).limit(1)
+  async function fetchLink() {
+    'use cache'
+    cacheLife('minutes')
+    cacheTag(`link-${code}`)
     
-    if (!result || result.length === 0) {
+    try {
+      const result = await db.select().from(links).where(eq(links.shortCode, code)).limit(1)
+      
+      if (!result || result.length === 0) {
+        return null
+      }
+      
+      const link = result[0]
+      return {
+        id: link.id,
+        original_url: link.originalUrl,
+        short_code: link.shortCode,
+        clicks: link.clicks,
+        created_at: link.createdAt,
+      }
+    } catch (error) {
+      console.error('Error fetching link:', error)
       return null
     }
-    
-    const link = result[0]
-    return {
-      id: link.id,
-      original_url: link.originalUrl,
-      short_code: link.shortCode,
-      clicks: link.clicks,
-      created_at: link.createdAt,
-    }
-  } catch (error) {
-    console.error('Error fetching link:', error)
-    return null
   }
+  return fetchLink()
 }
 
 export async function incrementLinkClicks(code: string): Promise<boolean> {
@@ -402,17 +409,24 @@ export async function getLatestClicks(limit: number = 5) {
 }
 
 export async function getLinkMetadata(url: string) {
-  try {
-    const response = await fetch(url, { next: { revalidate: 3600 } })
-    const html = await response.text()
-    
-    // Basic meta tag scraping
-    const title = html.match(/<title>(.*?)<\/title>/)?.[1] || ""
-    const description = html.match(/<meta name="description" content="(.*?)"/)?.[1] || ""
-    const ogImage = html.match(/<meta property="og:image" content="(.*?)"/)?.[1] || ""
+  async function fetchMetadata() {
+    'use cache'
+    cacheLife('hours')
+    cacheTag(`metadata-${url}`)
 
-    return { title, description, ogImage }
-  } catch (error) {
-    return { title: "Sovereign Link", description: "Redirecting via LinkSnip", ogImage: "" }
+    try {
+      const response = await fetch(url, { next: { revalidate: 3600 } })
+      const html = await response.text()
+      
+      // Basic meta tag scraping
+      const title = html.match(/<title>(.*?)<\/title>/)?.[1] || ""
+      const description = html.match(/<meta name="description" content="(.*?)"/)?.[1] || ""
+      const ogImage = html.match(/<meta property="og:image" content="(.*?)"/)?.[1] || ""
+
+      return { title, description, ogImage }
+    } catch (error) {
+      return { title: "Sovereign Link", description: "Redirecting via LinkSnip", ogImage: "" }
+    }
   }
+  return fetchMetadata()
 }
