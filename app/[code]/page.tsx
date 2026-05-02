@@ -2,7 +2,7 @@ import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getLinkByCode, getLinkMetadata, logClick } from "@/app/actions"
 import Script from "next/script"
-import { Suspense } from "react"
+import { Suspense, use } from "react"
 
 export async function generateMetadata(
   { params }: { params: Promise<{ code: string }> }
@@ -26,8 +26,10 @@ export async function generateMetadata(
   }
 }
 
-async function BridgeContent({ code }: { code: string }) {
-  // Log the click for analytics (uses dynamic headers)
+async function BridgeContent({ params }: { params: Promise<{ code: string }> }) {
+  const { code } = await params
+  
+  // Log the click for analytics (uses dynamic headers, strictly cached)
   const link = await logClick(code)
   if (!link) notFound()
 
@@ -84,10 +86,11 @@ async function BridgeContent({ code }: { code: string }) {
   )
 }
 
-export default async function BridgePage(
+export default function BridgePage(
   { params }: { params: Promise<{ code: string }> }
 ) {
-  const { code } = await params
+  // DO NOT await params here. Pass the promise down into the Suspense boundary.
+  // This satisfies the Next.js 16.2 'cacheComponents' requirement for dynamic parameters.
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] flex flex-col items-center justify-center text-white relative overflow-hidden">
@@ -100,7 +103,7 @@ export default async function BridgePage(
           <h1 className="text-2xl font-bold tracking-tight text-white/60">Initializing Engine...</h1>
         </div>
       }>
-        <BridgeContent code={code} />
+        <BridgeContent params={params} />
       </Suspense>
 
       <style dangerouslySetInnerHTML={{ __html: `
