@@ -3,6 +3,8 @@ import { notFound, redirect } from "next/navigation"
 import { getLinkByCode, incrementLinkClicks, handleLinkClick, getLinkMetadata, logClick } from "@/app/actions"
 import Script from "next/script"
 
+export const dynamic = 'force-dynamic'
+
 export async function generateMetadata(
   { params }: { params: Promise<{ code: string }> }
 ): Promise<Metadata> {
