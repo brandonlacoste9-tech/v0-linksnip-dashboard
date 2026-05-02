@@ -97,7 +97,7 @@ export async function getLinks(): Promise<Link[]> {
       const query = db.select().from(links)
       
       if (userId) {
-        query.where(eq(links.userId, userId))
+        query.where(eq(links.userId, userId as string))
       } else {
         // If no user, only show trial links (null userId)
         query.where(sql`${links.userId} IS NULL`)
@@ -219,7 +219,7 @@ export async function getAnalyticsData() {
         .innerJoin(links, eq(clicks.linkId, links.id))
         .where(and(
           gte(clicks.timestamp, twentyFourHoursAgo),
-          eq(links.userId, userId)
+          eq(links.userId, userId as string)
         ))
         .groupBy(sql`to_char(${clicks.timestamp}, 'HH24:00')`)
         .orderBy(sql`to_char(${clicks.timestamp}, 'HH24:00')`)
@@ -234,7 +234,7 @@ export async function getAnalyticsData() {
         .innerJoin(links, eq(clicks.linkId, links.id))
         .where(and(
           gte(clicks.timestamp, sevenDaysAgo),
-          eq(links.userId, userId)
+          eq(links.userId, userId as string)
         ))
         .groupBy(sql`to_char(${clicks.timestamp}, 'Dy')`)
         .orderBy(sql`min(${clicks.timestamp})`)
@@ -247,7 +247,7 @@ export async function getAnalyticsData() {
         })
         .from(clicks)
         .innerJoin(links, eq(clicks.linkId, links.id))
-        .where(eq(links.userId, userId))
+        .where(eq(links.userId, userId as string))
         .groupBy(sql`COALESCE(${clicks.referrer}, 'Direct')`)
         .orderBy(sql`count(*) desc`)
         .limit(6)
@@ -260,7 +260,7 @@ export async function getAnalyticsData() {
         })
         .from(clicks)
         .innerJoin(links, eq(clicks.linkId, links.id))
-        .where(eq(links.userId, userId))
+        .where(eq(links.userId, userId as string))
         .groupBy(sql`COALESCE(${clicks.country}, 'Unknown')`)
         .orderBy(sql`count(*) desc`)
         .limit(6)
@@ -273,7 +273,7 @@ export async function getAnalyticsData() {
         })
         .from(clicks)
         .innerJoin(links, eq(clicks.linkId, links.id))
-        .where(eq(links.userId, userId))
+        .where(eq(links.userId, userId as string))
 
       return {
         hourlyData,
@@ -365,7 +365,7 @@ export async function getClicksExportData() {
       })
       .from(clicks)
       .innerJoin(links, eq(clicks.linkId, links.id))
-      .where(eq(links.userId, userId))
+      .where(eq(links.userId, userId as string))
       .orderBy(desc(clicks.timestamp))
 
     return result
@@ -390,7 +390,7 @@ export async function getLatestClicks(limit: number = 5) {
       })
       .from(clicks)
       .innerJoin(links, eq(clicks.linkId, links.id))
-      .where(eq(links.userId, userId))
+      .where(eq(links.userId, userId as string))
       .orderBy(desc(clicks.timestamp))
       .limit(limit)
 

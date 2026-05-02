@@ -41,10 +41,7 @@ const nextConfig = {
       },
     ];
   },
-  experimental: {
-    dynamicIO: true,
-    cacheComponents: true,
-  },
+  cacheComponents: true,
 };
 
 export default nextConfig;
