@@ -6,10 +6,10 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, PieChart, Pie, Cell
 } from "recharts"
-import { Activity, Globe, ArrowLeft, TrendingUp, Users, MousePointerClick, BarChart3, Database, Beaker } from "lucide-react"
+import { Activity, Globe, ArrowLeft, TrendingUp, Users, MousePointerClick, BarChart3, Database, Beaker, Download } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { getAnalyticsData } from "@/app/actions"
+import { getAnalyticsData, getClicksExportData } from "@/app/actions"
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -61,6 +61,7 @@ export default function AnalyticsContent() {
   const [isDemoMode, setIsDemoMode] = useState(false)
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState<any>(null)
+  const [exporting, setExporting] = useState(false)
 
   useEffect(() => {
     async function loadData() {
@@ -76,6 +77,37 @@ export default function AnalyticsContent() {
     }
     loadData()
   }, [])
+
+  const handleExportClicks = async () => {
+    try {
+      setExporting(true)
+      const clicks = await getClicksExportData()
+      if (clicks.length === 0) {
+        toast.error("No click data to export")
+        return
+      }
+
+      const headers = ["Timestamp", "Short Code", "Destination URL", "IP Address", "Country", "Referrer", "User Agent"]
+      const csvContent = [
+        headers.join(","),
+        ...clicks.map(c => `"${c.timestamp.toISOString()}","${c.shortCode}","${c.originalUrl}","${c.ipAddress || ''}","${c.country || ''}","${c.referrer || ''}","${c.userAgent?.replace(/"/g, '""') || ''}"`)
+      ].join("\n")
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" })
+      const url = URL.createObjectURL(blob)
+      const anchor = document.createElement("a")
+      anchor.setAttribute("href", url)
+      anchor.setAttribute("download", `linksnip-analytics-${new Date().toISOString().split('T')[0]}.csv`)
+      document.body.appendChild(anchor)
+      anchor.click()
+      document.body.removeChild(anchor)
+      toast.success("Detailed analytics exported!")
+    } catch (error) {
+      toast.error("Failed to export data")
+    } finally {
+      setExporting(false)
+    }
+  }
 
   const displayData = isDemoMode ? {
     hourly: mockHourly,
@@ -113,7 +145,17 @@ export default function AnalyticsContent() {
         </div>
 
         <div className="flex items-center gap-6">
-          <div className="flex items-center space-x-2 bg-neutral-900/50 px-4 py-2 rounded-full border border-neutral-800">
+          <Button 
+            variant="outline" 
+            onClick={handleExportClicks}
+            disabled={exporting || isDemoMode}
+            className="border-neutral-800 bg-neutral-900/50 hover:bg-neutral-800 text-neutral-300 hover:text-amber-400 rounded-xl transition-all h-10 px-4"
+          >
+            {exporting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Download className="w-4 h-4 mr-2" />}
+            Export Detailed CSV
+          </Button>
+          
+          <div className="flex items-center space-x-2 bg-neutral-900/50 px-4 py-2 rounded-full border border-neutral-800 h-10">
             <Beaker className={`w-4 h-4 ${isDemoMode ? 'text-amber-500' : 'text-neutral-500'}`} />
             <Label htmlFor="demo-mode" className="text-xs font-semibold text-neutral-400 cursor-pointer">Demo Mode</Label>
             <Switch 

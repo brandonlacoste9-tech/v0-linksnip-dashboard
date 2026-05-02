@@ -4,16 +4,7 @@ import Link from "next/link";
 import { Lock, ArrowRight, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DashboardContent from "./dashboard-content";
-
-// Authorized user IDs — add your Clerk user ID(s) here
-// You can also set AUTHORIZED_USER_IDS in .env.local as a comma-separated list
-const getAuthorizedUsers = (): string[] => {
-  const envUsers = process.env.AUTHORIZED_USER_IDS || "";
-  return envUsers
-    .split(",")
-    .map((id) => id.trim())
-    .filter(Boolean);
-};
+import { checkIsAdmin } from "@/app/actions";
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -22,11 +13,7 @@ export default async function DashboardPage() {
     redirect("/");
   }
 
-  const authorizedUsers = getAuthorizedUsers();
-
-  // If no allowlist is configured, allow all authenticated users (development mode)
-  // Once you add IDs to AUTHORIZED_USER_IDS, it becomes strict
-  const isAuthorized = authorizedUsers.length === 0 || authorizedUsers.includes(userId);
+  const isAuthorized = await checkIsAdmin();
 
   if (!isAuthorized) {
     return <PaywallScreen />;

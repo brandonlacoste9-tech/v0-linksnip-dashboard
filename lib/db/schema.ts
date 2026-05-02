@@ -3,11 +3,14 @@ import { relations } from "drizzle-orm";
 
 export const links = pgTable("links", {
   id: serial("id").primaryKey(),
+  userId: text("user_id"), // Nullable for now to support existing links
   originalUrl: text("original_url").notNull(),
   shortCode: text("short_code").notNull().unique(),
   clicks: integer("clicks").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (table) => ({
+  userIdIdx: index("user_id_idx").on(table.userId),
+}));
 
 export const clicks = pgTable("clicks", {
   id: serial("id").primaryKey(),
@@ -31,4 +34,14 @@ export const clicksRelations = relations(clicks, ({ one }) => ({
     fields: [clicks.linkId],
     references: [links.id],
   }),
+}));
+
+export const authorizedUsers = pgTable("authorized_users", {
+  id: serial("id").primaryKey(),
+  clerkId: text("clerk_id").notNull().unique(),
+  email: text("email"),
+  role: text("role").default("admin").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => ({
+  clerkIdIdx: index("clerk_id_idx").on(table.clerkId),
 }));

@@ -1,11 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Link2, Wand2, ArrowRight, Lock, X } from "lucide-react"
+import { Link2, Wand2, ArrowRight, Lock, X, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
 import { useI18n } from "@/lib/i18n/context"
+import { createLink } from "@/app/actions"
 
 export default function TrialEngine() {
   const { t } = useI18n();
@@ -13,6 +14,7 @@ export default function TrialEngine() {
   const [code, setCode] = useState("")
   const [trialCount, setTrialCount] = useState(0)
   const [showGate, setShowGate] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [results, setResults] = useState<{ url: string; code: string }[]>([])
 
   useEffect(() => {
@@ -26,7 +28,7 @@ export default function TrialEngine() {
     setCode(c)
   }
 
-  const handleShorten = () => {
+  const handleShorten = async () => {
     if (!url) { toast.error("Enter a URL"); return }
 
     if (trialCount >= 3) {
@@ -34,17 +36,28 @@ export default function TrialEngine() {
       return
     }
 
-    const finalCode = code || Array.from({ length: 6 }, () => "abcdefghjkmnpqrstuvwxyz23456789".charAt(Math.floor(Math.random() * 30))).join("")
-    const newCount = trialCount + 1
-    setTrialCount(newCount)
-    localStorage.setItem("linksnip_trial_count", newCount.toString())
-    setResults(prev => [{ url, code: finalCode }, ...prev])
-    setUrl("")
-    setCode("")
-    toast.success(`Link shortened! (${newCount}/3)`)
+    setIsLoading(true)
+    try {
+      const finalCode = code || Array.from({ length: 6 }, () => "abcdefghjkmnpqrstuvwxyz23456789".charAt(Math.floor(Math.random() * 30))).join("")
+      
+      // Call the real server action
+      const newLink = await createLink(url, finalCode)
+      
+      const newCount = trialCount + 1
+      setTrialCount(newCount)
+      localStorage.setItem("linksnip_trial_count", newCount.toString())
+      setResults(prev => [{ url: newLink.original_url, code: newLink.short_code }, ...prev])
+      setUrl("")
+      setCode("")
+      toast.success(`Link shortened! (${newCount}/3)`)
 
-    if (newCount >= 3) {
-      setTimeout(() => setShowGate(true), 1500)
+      if (newCount >= 3) {
+        setTimeout(() => setShowGate(true), 1500)
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to create link")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -75,8 +88,16 @@ export default function TrialEngine() {
                 <Wand2 className="w-4 h-4" />
               </Button>
             </div>
-            <Button onClick={handleShorten} className="h-12 px-6 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-semibold hover:from-amber-400 hover:to-amber-500 rounded-xl shrink-0 shadow-[0_0_20px_-5px_rgba(245,158,11,0.4)]">
-              {t.trial.button}
+            <Button 
+              onClick={handleShorten} 
+              disabled={isLoading}
+              className="h-12 px-6 bg-gradient-to-r from-amber-500 to-amber-600 text-black font-semibold hover:from-amber-400 hover:to-amber-500 rounded-xl shrink-0 shadow-[0_0_20px_-5px_rgba(245,158,11,0.4)] disabled:opacity-50"
+            >
+              {isLoading ? (
+                <Loader2 className="w-5 h-5 animate-spin" />
+              ) : (
+                t.trial.button
+              )}
             </Button>
           </div>
 

@@ -5,7 +5,7 @@ import { useState, useMemo, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
   Plus, Copy, MoreVertical, Search, Wand2, 
-  ExternalLink, TrendingUp, Download, BarChart3
+  ExternalLink, TrendingUp, Download, BarChart3, Settings
 } from "lucide-react"
 import { toast } from "sonner"
 import NextLink from "next/link"
@@ -143,6 +143,11 @@ export default function DashboardPage() {
           <Button variant="outline" className="border-neutral-800 bg-neutral-900/50 hover:bg-neutral-800 text-neutral-300 hover:text-amber-400 rounded-xl transition-all" asChild>
             <NextLink href="/dashboard/analytics">
               <BarChart3 className="w-4 h-4 mr-2" /> Analytics
+            </NextLink>
+          </Button>
+          <Button variant="outline" className="border-neutral-800 bg-neutral-900/50 hover:bg-neutral-800 text-neutral-300 hover:text-amber-400 rounded-xl transition-all" asChild>
+            <NextLink href="/dashboard/settings">
+              <Settings className="w-4 h-4 mr-2" /> Settings
             </NextLink>
           </Button>
           <Button variant="outline" onClick={handleExportCSV} className="border-neutral-800 bg-neutral-900/50 hover:bg-neutral-800 text-neutral-300 hover:text-neutral-100 rounded-xl transition-all">

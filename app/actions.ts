@@ -1,9 +1,8 @@
-'use server'
-
+import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { db } from '@/lib/db'
-import { links, clicks } from '@/lib/db/schema'
-import { eq, desc, sql, gte, lte } from 'drizzle-orm'
+import { links, clicks, authorizedUsers } from '@/lib/db/schema'
+import { eq, desc, sql, gte, lte, and } from 'drizzle-orm'
 import { headers } from 'next/headers'
 
 export interface Link {
@@ -14,7 +13,36 @@ export interface Link {
   created_at: Date
 }
 
+export interface AuthorizedUser {
+  id: number
+  clerkId: string
+  email: string | null
+  role: string
+  createdAt: Date
+}
+
+// Helper to check if current user is an admin (either in Env allowlist or Database)
+export async function checkIsAdmin(): Promise<boolean> {
+  const { userId } = await auth()
+  if (!userId) return false
+
+  // 1. Check Environment Bootstrap Admins
+  const envUsers = process.env.AUTHORIZED_USER_IDS || ""
+  const bootstrapAdmins = envUsers.split(",").map(id => id.trim()).filter(Boolean)
+  if (bootstrapAdmins.includes(userId)) return true
+
+  // 2. Check Database
+  const dbUser = await db.select()
+    .from(authorizedUsers)
+    .where(eq(authorizedUsers.clerkId, userId))
+    .limit(1)
+
+  return dbUser.length > 0
+}
+
 export async function createLink(originalUrl: string, shortCode: string): Promise<Link> {
+  const { userId } = await auth()
+  
   try {
     // Validate URL format
     new URL(originalUrl)
@@ -28,6 +56,7 @@ export async function createLink(originalUrl: string, shortCode: string): Promis
     const result = await db.insert(links).values({
       originalUrl,
       shortCode,
+      userId: userId || null, // Allow null for trial links
     }).returning()
     
     if (!result || result.length === 0) {
@@ -54,8 +83,19 @@ export async function createLink(originalUrl: string, shortCode: string): Promis
 }
 
 export async function getLinks(): Promise<Link[]> {
+  const { userId } = await auth()
+  
   try {
-    const result = await db.select().from(links).orderBy(desc(links.createdAt))
+    const query = db.select().from(links)
+    
+    if (userId) {
+      query.where(eq(links.userId, userId))
+    } else {
+      // If no user, only show trial links (null userId)
+      query.where(sql`${links.userId} IS NULL`)
+    }
+
+    const result = await query.orderBy(desc(links.createdAt))
     
     return result.map((link) => ({
       id: link.id,
@@ -143,6 +183,9 @@ export async function handleLinkClick(code: string) {
 }
 
 export async function getAnalyticsData() {
+  const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
+
   try {
     const now = new Date()
     const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000)
@@ -155,7 +198,11 @@ export async function getAnalyticsData() {
         count: sql<number>`count(*)::int`,
       })
       .from(clicks)
-      .where(gte(clicks.timestamp, twentyFourHoursAgo))
+      .innerJoin(links, eq(clicks.linkId, links.id))
+      .where(and(
+        gte(clicks.timestamp, twentyFourHoursAgo),
+        eq(links.userId, userId)
+      ))
       .groupBy(sql`to_char(${clicks.timestamp}, 'HH24:00')`)
       .orderBy(sql`to_char(${clicks.timestamp}, 'HH24:00')`)
 
@@ -166,7 +213,11 @@ export async function getAnalyticsData() {
         count: sql<number>`count(*)::int`,
       })
       .from(clicks)
-      .where(gte(clicks.timestamp, sevenDaysAgo))
+      .innerJoin(links, eq(clicks.linkId, links.id))
+      .where(and(
+        gte(clicks.timestamp, sevenDaysAgo),
+        eq(links.userId, userId)
+      ))
       .groupBy(sql`to_char(${clicks.timestamp}, 'Dy')`)
       .orderBy(sql`min(${clicks.timestamp})`)
 
@@ -177,6 +228,8 @@ export async function getAnalyticsData() {
         count: sql<number>`count(*)::int`,
       })
       .from(clicks)
+      .innerJoin(links, eq(clicks.linkId, links.id))
+      .where(eq(links.userId, userId))
       .groupBy(sql`COALESCE(${clicks.referrer}, 'Direct')`)
       .orderBy(sql`count(*) desc`)
       .limit(6)
@@ -188,6 +241,8 @@ export async function getAnalyticsData() {
         count: sql<number>`count(*)::int`,
       })
       .from(clicks)
+      .innerJoin(links, eq(clicks.linkId, links.id))
+      .where(eq(links.userId, userId))
       .groupBy(sql`COALESCE(${clicks.country}, 'Unknown')`)
       .orderBy(sql`count(*) desc`)
       .limit(6)
@@ -199,6 +254,8 @@ export async function getAnalyticsData() {
         uniqueVisitors: sql<number>`count(distinct ${clicks.ipAddress})::int`,
       })
       .from(clicks)
+      .innerJoin(links, eq(clicks.linkId, links.id))
+      .where(eq(links.userId, userId))
 
     return {
       hourlyData,
@@ -210,5 +267,89 @@ export async function getAnalyticsData() {
   } catch (error) {
     console.error('Error fetching analytics data:', error)
     throw new Error('Failed to fetch analytics data')
+  }
+}
+
+// Admin Management Actions
+export async function getAuthorizedUsersList(): Promise<AuthorizedUser[]> {
+  const isAdmin = await checkIsAdmin()
+  if (!isAdmin) throw new Error('Unauthorized')
+
+  try {
+    const result = await db.select().from(authorizedUsers).orderBy(desc(authorizedUsers.createdAt))
+    return result.map(user => ({
+      id: user.id,
+      clerkId: user.clerkId,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
+    }))
+  } catch (error) {
+    console.error('Error fetching authorized users:', error)
+    return []
+  }
+}
+
+export async function addAuthorizedUser(clerkId: string, email?: string): Promise<AuthorizedUser> {
+  const isAdmin = await checkIsAdmin()
+  if (!isAdmin) throw new Error('Unauthorized')
+
+  try {
+    const [user] = await db.insert(authorizedUsers).values({
+      clerkId,
+      email: email || null,
+      role: 'admin',
+    }).returning()
+    
+    return {
+      id: user.id,
+      clerkId: user.clerkId,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
+    }
+  } catch (error) {
+    console.error('Error adding authorized user:', error)
+    throw new Error('Failed to add user')
+  }
+}
+
+export async function removeAuthorizedUser(id: number): Promise<boolean> {
+  const isAdmin = await checkIsAdmin()
+  if (!isAdmin) throw new Error('Unauthorized')
+
+  try {
+    await db.delete(authorizedUsers).where(eq(authorizedUsers.id, id))
+    return true
+  } catch (error) {
+    console.error('Error removing authorized user:', error)
+    throw new Error('Failed to remove user')
+  }
+}
+
+export async function getClicksExportData() {
+  const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  try {
+    const result = await db
+      .select({
+        shortCode: links.shortCode,
+        originalUrl: links.originalUrl,
+        timestamp: clicks.timestamp,
+        ipAddress: clicks.ipAddress,
+        country: clicks.country,
+        userAgent: clicks.userAgent,
+        referrer: clicks.referrer,
+      })
+      .from(clicks)
+      .innerJoin(links, eq(clicks.linkId, links.id))
+      .where(eq(links.userId, userId))
+      .orderBy(desc(clicks.timestamp))
+
+    return result
+  } catch (error) {
+    console.error('Error fetching export data:', error)
+    throw new Error('Failed to fetch export data')
   }
 }
