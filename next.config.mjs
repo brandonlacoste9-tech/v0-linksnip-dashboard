@@ -30,12 +30,20 @@ const nextConfig = {
             value: 'origin-when-cross-origin',
           },
           {
+            key: 'X-XSS-Protection',
+            value: '1; mode=block',
+          },
+          {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=(), browsing-topics=()',
           },
         ],
       },
     ];
+  },
+  experimental: {
+    dynamicIO: true,
+    cacheComponents: true,
   },
 };
 
