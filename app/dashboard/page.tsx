@@ -1,12 +1,13 @@
 import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { Lock, ArrowRight, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DashboardContent from "./dashboard-content";
 import { checkIsAdmin } from "@/app/actions";
+import { Suspense } from "react";
 
-export default async function DashboardPage() {
+async function DashboardContainer() {
   const { userId } = await auth();
 
   if (!userId) {
@@ -20,6 +21,21 @@ export default async function DashboardPage() {
   }
 
   return <DashboardContent />;
+}
+
+export default function DashboardPage() {
+  // Wrap the dynamic dashboard logic in Suspense to satisfy Next.js 16.2 caching rules
+  return (
+    <Suspense fallback={
+      <div className="flex-1 flex items-center justify-center h-full bg-[#0a0a0a]">
+        <div className="text-zinc-500 animate-pulse font-mono text-sm tracking-widest uppercase">
+          Authenticating Sovereign Vault...
+        </div>
+      </div>
+    }>
+      <DashboardContainer />
+    </Suspense>
+  );
 }
 
 function PaywallScreen() {
