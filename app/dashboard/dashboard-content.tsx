@@ -5,7 +5,7 @@ import { useState, useMemo, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { 
   Plus, Copy, MoreVertical, Search, Wand2, 
-  ExternalLink, TrendingUp, Download, BarChart3, Settings
+  ExternalLink, TrendingUp, Download, BarChart3, Settings, Activity, Terminal, Globe
 } from "lucide-react"
 import { toast } from "sonner"
 import NextLink from "next/link"
@@ -25,13 +25,14 @@ import {
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { createLink, getLinks } from "@/app/actions"
+import { createLink, getLinks, getLatestClicks } from "@/app/actions"
 import type { Link } from "@/app/actions"
 
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [links, setLinks] = useState<Link[]>([])
+  const [liveClicks, setLiveClicks] = useState<any[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   
@@ -51,6 +52,15 @@ export default function DashboardPage() {
       }
     }
     loadLinks()
+
+    // Live Pulse Polling (Every 10 seconds)
+    const pollClicks = async () => {
+      const data = await getLatestClicks(5)
+      setLiveClicks(data)
+    }
+    pollClicks()
+    const interval = setInterval(pollClicks, 10000)
+    return () => clearInterval(interval)
   }, [])
 
   const filteredLinks = useMemo(() => {
@@ -333,6 +343,47 @@ export default function DashboardPage() {
               </TableBody>
             </Table>
           </Card>
+
+          {/* Live Pulse Feed */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between px-2">
+              <h3 className="text-sm font-bold uppercase tracking-widest text-neutral-500 flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                Live Command Pulse
+              </h3>
+              <Badge variant="outline" className="text-[10px] bg-neutral-900 border-neutral-800 text-neutral-500 uppercase tracking-tighter font-bold">
+                Updates every 10s
+              </Badge>
+            </div>
+            
+            <div className="bg-neutral-950/80 border border-neutral-800/60 rounded-2xl p-4 font-mono text-[11px] space-y-2 relative overflow-hidden group">
+              <div className="absolute top-0 left-0 w-1 h-full bg-amber-500/20 group-hover:bg-amber-500/50 transition-colors" />
+              <Terminal className="absolute right-4 top-4 w-12 h-12 text-neutral-800/20 -rotate-12" />
+              
+              <AnimatePresence mode="popLayout">
+                {liveClicks.length > 0 ? liveClicks.map((click, i) => (
+                  <motion.div 
+                    key={click.id}
+                    initial={{ opacity: 0, x: -5 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="flex items-center gap-3 text-neutral-400 py-1 border-b border-neutral-900/50 last:border-0"
+                  >
+                    <span className="text-amber-500/60 w-16">[{new Date(click.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'})}]</span>
+                    <span className="text-neutral-200">New click on</span>
+                    <span className="text-amber-400 font-bold">linksnip.ca/{click.shortCode}</span>
+                    <span className="flex items-center gap-1.5 ml-auto">
+                      <Globe className="w-3 h-3 text-neutral-600" />
+                      <span className="text-neutral-500 uppercase">{click.country || 'Global'}</span>
+                    </span>
+                  </motion.div>
+                )) : (
+                  <div className="text-neutral-700 py-4 italic">
+                    {loading ? "Initializing neural link..." : "Standing by... waiting for pulse."}
+                  </div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
       </div>
 
