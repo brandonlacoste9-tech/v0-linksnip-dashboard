@@ -54,13 +54,8 @@ export default function DashboardPage() {
     const initEngine = async () => {
       try {
         // Trigger self-healing migration and check stats
-        const existingOrigins = await trustEngine.getAnonymizedCohortStats();
-        // If there is already an origin, just set a dummy one for now to skip the lock screen
-        // In reality, this would check the current user's session
-        if (existingOrigins.totalOrigins > 0) {
-          // Temporarily set a dummy to bypass for testing if one already exists
-          setOriginHash("a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2");
-        }
+        await trustEngine.getAnonymizedCohortStats();
+        // Strict Mode: No longer bypassing. The user MUST mint their own anchor via WebAuthn.
       } catch (err: any) {
         console.error("Failed to initialize Imperial Console:", err);
         setOriginHash("ERROR: " + err.message);
