@@ -100,7 +100,7 @@ export default function DashboardPage() {
       const options = await generateWebAuthnOptionsAction("mrk-admin");
       
       // 2. Prompt user biometrics
-      const attResp = await startRegistration(options);
+      const attResp = await startRegistration({ optionsJSON: options });
       
       // 3. Verify response on server and mint anchor
       const result = await verifyWebAuthnRegistrationAction(attResp);
