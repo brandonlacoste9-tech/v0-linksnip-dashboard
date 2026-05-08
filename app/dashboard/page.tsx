@@ -1,25 +1,38 @@
-// app/dashboard/page.tsx
-// Primary dashboard entry point — renders the Mark Protocol Imperial Console
-
 "use client";
 
 import { useEffect, useState } from "react";
 import { ImperialConsole } from "@/components/mrk/ImperialConsole";
 import { AggregationEngine } from "@/lib/mrk/intelligence/AggregationEngine";
 import { TrustDelegationEngine } from "@/lib/mrk/trust/TrustDelegationEngine";
+import { 
+  isChainIntactAction,
+  emitDelegationInviteAction,
+  claimDelegationInviteAction,
+  revokeTrustAnchorAction,
+  getTrustTreeAction,
+  getAnonymizedCohortStatsAction,
+  mintOriginAnchorAction 
+} from "@/app/mrk-actions";
 
-// Singleton engines — instantiated once, persist across re-renders.
+// Singleton engine for intelligence (purely in-memory on client for now)
 let aggregationEngine: AggregationEngine;
-let trustEngine: TrustDelegationEngine;
+
+// Proxy object that implements the TrustDelegationEngine interface using Server Actions
+const trustEngineProxy: TrustDelegationEngine = {
+  isChainIntact: isChainIntactAction,
+  emitDelegationInvite: emitDelegationInviteAction as any,
+  claimDelegationInvite: claimDelegationInviteAction,
+  revokeTrustAnchor: revokeTrustAnchorAction,
+  getTrustTree: getTrustTreeAction,
+  getAnonymizedCohortStats: getAnonymizedCohortStatsAction,
+  mintOriginAnchor: mintOriginAnchorAction,
+};
 
 function getEngines() {
   if (!aggregationEngine) {
     aggregationEngine = new AggregationEngine();
   }
-  if (!trustEngine) {
-    trustEngine = new TrustDelegationEngine();
-  }
-  return { aggregationEngine, trustEngine };
+  return { aggregationEngine, trustEngine: trustEngineProxy };
 }
 
 export default function DashboardPage() {
