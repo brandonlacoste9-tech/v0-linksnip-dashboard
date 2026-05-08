@@ -78,13 +78,13 @@ export class CredentialManager {
     });
 
     if (verification.verified && verification.registrationInfo) {
-      const { credentialID, credentialPublicKey } = verification.registrationInfo;
+      const { credential } = verification.registrationInfo;
       
       await this.clearChallenge(userId);
 
       return {
-        id: Buffer.from(credentialID).toString('base64url'),
-        publicKey: Buffer.from(credentialPublicKey).toString('base64url'),
+        id: Buffer.from(credential.id).toString('base64url'),
+        publicKey: Buffer.from(credential.publicKey).toString('base64url'),
         verified: true,
       };
     }
