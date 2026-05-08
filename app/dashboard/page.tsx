@@ -63,7 +63,7 @@ export default function DashboardPage() {
           setOriginHash(savedHash);
         }
 
-        // 3. Fetch REAL handshake data from the database to populate the graph
+        // 3. Fetch initial historical handshake data
         const recentEvents = await getHandshakeEventsAction();
         recentEvents.forEach(ev => aggregationEngine.ingestEvent(ev));
       } catch (err: any) {
@@ -73,6 +73,18 @@ export default function DashboardPage() {
     };
 
     initEngine();
+
+    // 4. Set up a real-time polling interval to fetch NEW handshakes from the DB
+    const pollInterval = setInterval(async () => {
+      try {
+        const freshEvents = await getHandshakeEventsAction();
+        freshEvents.forEach(ev => aggregationEngine.ingestEvent(ev));
+      } catch (e) {
+        console.error("Polling failed:", e);
+      }
+    }, 10000); // Check for new traffic every 10 seconds
+
+    return () => clearInterval(pollInterval);
   }, []);
 
   const handleBiometricEnrollment = async () => {
