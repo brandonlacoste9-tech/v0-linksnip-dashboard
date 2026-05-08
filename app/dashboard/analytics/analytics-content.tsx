@@ -129,145 +129,162 @@ export default function AnalyticsContent() {
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0a0a0a] text-neutral-200 overflow-hidden relative">
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-amber-600/5 blur-[120px] pointer-events-none" />
+    <div className="flex-1 flex flex-col h-full bg-[#0a0e1a] text-zinc-300 overflow-hidden relative">
+      {/* Background Decorative Glows */}
+      <div className="absolute top-[-15%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#c9a84c]/5 blur-[120px] pointer-events-none animate-breathe" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#c9a84c]/3 blur-[100px] pointer-events-none" />
 
       {/* Header */}
-      <header className="h-20 border-b border-neutral-800/60 bg-neutral-950/50 backdrop-blur-md flex items-center justify-between px-8 shrink-0 z-10">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="text-neutral-400 hover:text-white" asChild>
+      <header className="h-20 border-b border-white/5 bg-[#0d1221]/80 backdrop-blur-xl flex items-center justify-between px-8 shrink-0 z-20 shadow-imperial">
+        <div className="flex items-center gap-6">
+          <Button variant="ghost" size="icon" className="text-zinc-500 hover:text-[#c9a84c] hover:bg-[#c9a84c]/10 rounded-xl transition-all" asChild>
             <Link href="/dashboard"><ArrowLeft className="w-5 h-5" /></Link>
           </Button>
           <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-neutral-100 to-neutral-400 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold text-gradient-gold tracking-tight">
               Sovereign Analytics
             </h1>
+            <p className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] font-medium mt-0.5">Real-time Click Intelligence</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           <Button 
             variant="outline" 
             onClick={handleExportClicks}
             disabled={exporting || isDemoMode}
-            className="border-neutral-800 bg-neutral-900/50 hover:bg-neutral-800 text-neutral-300 hover:text-amber-400 rounded-xl transition-all h-10 px-4"
+            className="border-white/5 bg-white/5 hover:bg-white/10 text-zinc-300 hover:text-[#c9a84c] rounded-xl transition-all h-11 px-6 shadow-imperial-hover border-gold-500/20"
           >
             {exporting ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Download className="w-4 h-4 mr-2" />}
-            Export Detailed CSV
+            Export Intelligence
           </Button>
           
-          <div className="flex items-center space-x-2 bg-neutral-900/50 px-4 py-2 rounded-full border border-neutral-800 h-10">
-            <Beaker className={`w-4 h-4 ${isDemoMode ? 'text-amber-500' : 'text-neutral-500'}`} />
-            <Label htmlFor="demo-mode" className="text-xs font-semibold text-neutral-400 cursor-pointer">Demo Mode</Label>
+          <div className="flex items-center space-x-3 bg-white/5 px-4 py-2 rounded-xl border border-white/5 h-11">
+            <Beaker className={`w-4 h-4 ${isDemoMode ? 'text-[#c9a84c] glow-gold' : 'text-zinc-500'}`} />
+            <Label htmlFor="demo-mode" className="text-xs font-semibold text-zinc-400 cursor-pointer">Simulation</Label>
             <Switch 
               id="demo-mode" 
               checked={isDemoMode} 
               onCheckedChange={setIsDemoMode}
-              className="data-[state=checked]:bg-amber-500"
+              className="data-[state=checked]:bg-[#c9a84c]"
             />
           </div>
 
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20">
-            <div className={`w-2 h-2 rounded-full ${isDemoMode ? 'bg-amber-400' : 'bg-emerald-400 animate-pulse'}`} />
-            <span className={`${isDemoMode ? 'text-amber-400' : 'text-emerald-400'} text-xs font-semibold uppercase tracking-wider`}>
-              {isDemoMode ? 'Simulated' : 'Live'}
+          <div className={`flex items-center gap-2 px-4 py-2 rounded-xl border ${isDemoMode ? 'bg-[#c9a84c]/10 border-[#c9a84c]/20' : 'bg-emerald-500/10 border-emerald-500/20 shadow-[0_0_15px_rgba(16,185,129,0.1)]'}`}>
+            <div className={`w-2 h-2 rounded-full ${isDemoMode ? 'bg-[#c9a84c] shadow-[0_0_8px_#c9a84c]' : 'bg-emerald-400 animate-pulse shadow-[0_0_8px_#34d399]'}`} />
+            <span className={`${isDemoMode ? 'text-[#c9a84c]' : 'text-emerald-400'} text-[10px] font-bold uppercase tracking-widest`}>
+              {isDemoMode ? 'Simulated' : 'Live Stream'}
             </span>
           </div>
         </div>
       </header>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto p-8" style={{ scrollbarWidth: "thin", scrollbarColor: "#333 transparent" }}>
-        <div className="max-w-6xl mx-auto space-y-8">
+      <div className="flex-1 overflow-y-auto p-8 scrollbar-imperial" style={{ scrollbarWidth: "thin" }}>
+        <div className="max-w-7xl mx-auto space-y-8 animate-float">
 
           {/* Top Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <StatCard icon={<MousePointerClick className="w-5 h-5" />} title="Total Clicks" value={displayData.totals.totalClicks.toLocaleString()} change="+18.3%" loading={loading && !isDemoMode} />
-            <StatCard icon={<Users className="w-5 h-5" />} title="Unique Visitors" value={displayData.totals.uniqueVisitors.toLocaleString()} change="+12.1%" loading={loading && !isDemoMode} />
-            <StatCard icon={<TrendingUp className="w-5 h-5" />} title="Avg CTR" value={isDemoMode ? "4.7%" : "—"} change="+2.4%" loading={loading && !isDemoMode} />
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+            <StatCard icon={<MousePointerClick className="w-5 h-5" />} title="Aggregate Clicks" value={displayData.totals.totalClicks.toLocaleString()} change="+18.3%" loading={loading && !isDemoMode} />
+            <StatCard icon={<Users className="w-5 h-5" />} title="Unique Identities" value={displayData.totals.uniqueVisitors.toLocaleString()} change="+12.1%" loading={loading && !isDemoMode} />
+            <StatCard icon={<TrendingUp className="w-5 h-5" />} title="Conversion Yield" value={isDemoMode ? "4.7%" : "—"} change="+2.4%" loading={loading && !isDemoMode} />
           </div>
 
           {/* Clicks Over 24 Hours */}
-          <Card className="border border-neutral-800/60 bg-neutral-900/40 backdrop-blur-xl rounded-2xl overflow-hidden">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-semibold text-neutral-400 uppercase tracking-wider flex items-center gap-2">
-                <Activity className="w-4 h-4 text-amber-500" /> {isDemoMode ? 'Simulated' : 'Real'} Clicks — Last 24 Hours
+          <Card className="glass-navy border-white/5 rounded-2xl overflow-hidden shadow-imperial">
+            <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-white/5 mb-6">
+              <CardTitle className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                <Activity className="w-4 h-4 text-[#c9a84c] animate-pulse" /> Temporal Distribution — 24h Window
               </CardTitle>
+              <div className="text-[10px] text-zinc-500 font-mono italic">Resolution: 60min/tick</div>
             </CardHeader>
-            <CardContent className="pt-4">
+            <CardContent className="pt-2">
               {loading && !isDemoMode ? (
-                <Skeleton className="w-full h-[280px] bg-neutral-900/50 rounded-xl" />
+                <Skeleton className="w-full h-[320px] bg-white/5 rounded-2xl" />
               ) : displayData.hourly.length > 0 ? (
-                <ResponsiveContainer width="100%" height={280}>
+                <ResponsiveContainer width="100%" height={320}>
                   <AreaChart data={displayData.hourly}>
                     <defs>
-                      <linearGradient id="amberGlow" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#f59e0b" stopOpacity={0.3} />
-                        <stop offset="100%" stopColor="#f59e0b" stopOpacity={0} />
+                      <linearGradient id="goldGlow" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#c9a84c" stopOpacity={0.2} />
+                        <stop offset="100%" stopColor="#c9a84c" stopOpacity={0} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
-                    <XAxis dataKey="hour" stroke="#52525b" tick={{ fill: "#71717a", fontSize: 11 }} tickLine={false} />
-                    <YAxis stroke="#52525b" tick={{ fill: "#71717a", fontSize: 11 }} tickLine={false} axisLine={false} />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Area type="monotone" dataKey="count" stroke="#f59e0b" strokeWidth={2} fill="url(#amberGlow)" />
+                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+                    <XAxis dataKey="hour" stroke="#3f3f46" tick={{ fill: "#71717a", fontSize: 10, fontWeight: 500 }} tickLine={false} axisLine={false} dy={10} />
+                    <YAxis stroke="#3f3f46" tick={{ fill: "#71717a", fontSize: 10, fontWeight: 500 }} tickLine={false} axisLine={false} />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#0d1221', border: '1px solid rgba(201,168,76,0.3)', borderRadius: '12px', boxShadow: '0 10px 30px rgba(0,0,0,0.5)' }}
+                      itemStyle={{ color: '#c9a84c', fontWeight: 'bold' }}
+                      labelStyle={{ color: '#71717a', fontSize: '10px', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.1em' }}
+                    />
+                    <Area type="monotone" dataKey="count" stroke="#c9a84c" strokeWidth={3} fill="url(#goldGlow)" />
                   </AreaChart>
                 </ResponsiveContainer>
               ) : (
-                <div className="h-[280px] flex flex-col items-center justify-center text-neutral-600 gap-4">
-                  <Database className="w-12 h-12 opacity-20" />
-                  <p className="text-sm">No real-time clicks recorded yet. Toggle Demo Mode to see visualization.</p>
+                <div className="h-[320px] flex flex-col items-center justify-center text-zinc-600 gap-6">
+                  <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center border border-white/5 shadow-inner">
+                    <Database className="w-8 h-8 opacity-20" />
+                  </div>
+                  <div className="text-center space-y-2">
+                    <p className="text-sm font-medium">Awaiting click telemetry...</p>
+                    <p className="text-xs text-zinc-600 max-w-[280px]">Connect your domain or activate simulation mode to visualize flow.</p>
+                  </div>
                 </div>
               )}
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
             {/* Weekly Bar Chart */}
-            <Card className="border border-neutral-800/60 bg-neutral-900/40 backdrop-blur-xl rounded-2xl overflow-hidden">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold text-neutral-400 uppercase tracking-wider flex items-center gap-2">
-                  <BarChart3 className="w-4 h-4 text-amber-500" /> Weekly Overview
+            <Card className="lg:col-span-3 glass-navy border-white/5 rounded-2xl overflow-hidden shadow-imperial">
+              <CardHeader className="pb-2 border-b border-white/5 mb-6">
+                <CardTitle className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                  <BarChart3 className="w-4 h-4 text-[#c9a84c]" /> Weekly Velocity
                 </CardTitle>
               </CardHeader>
-              <CardContent className="pt-4">
+              <CardContent className="pt-2">
                 {loading && !isDemoMode ? (
-                  <Skeleton className="w-full h-[220px] bg-neutral-900/50 rounded-xl" />
+                  <Skeleton className="w-full h-[240px] bg-white/5 rounded-2xl" />
                 ) : displayData.weekly.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={220}>
+                  <ResponsiveContainer width="100%" height={240}>
                     <BarChart data={displayData.weekly}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
-                      <XAxis dataKey="day" stroke="#52525b" tick={{ fill: "#71717a", fontSize: 12 }} tickLine={false} />
-                      <YAxis stroke="#52525b" tick={{ fill: "#71717a", fontSize: 11 }} tickLine={false} axisLine={false} />
-                      <Tooltip content={<CustomTooltip />} />
-                      <Bar dataKey="count" fill="#f59e0b" radius={[6, 6, 0, 0]} opacity={0.85} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+                      <XAxis dataKey="day" stroke="#3f3f46" tick={{ fill: "#71717a", fontSize: 11, fontWeight: 500 }} tickLine={false} axisLine={false} dy={10} />
+                      <YAxis stroke="#3f3f46" tick={{ fill: "#71717a", fontSize: 10, fontWeight: 500 }} tickLine={false} axisLine={false} />
+                      <Tooltip 
+                        cursor={{ fill: 'rgba(255,255,255,0.03)' }}
+                        contentStyle={{ backgroundColor: '#0d1221', border: '1px solid rgba(201,168,76,0.2)', borderRadius: '12px' }}
+                      />
+                      <Bar dataKey="count" fill="#c9a84c" radius={[4, 4, 0, 0]} opacity={0.8} />
                     </BarChart>
                   </ResponsiveContainer>
                 ) : (
-                  <div className="h-[220px] flex items-center justify-center text-neutral-600 text-sm">
-                    Awaiting weekly data...
+                  <div className="h-[240px] flex items-center justify-center text-zinc-600 text-sm font-medium italic">
+                    Historical sequence pending...
                   </div>
                 )}
               </CardContent>
             </Card>
 
             {/* Top Referrers */}
-            <Card className="border border-neutral-800/60 bg-neutral-900/40 backdrop-blur-xl rounded-2xl overflow-hidden">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold text-neutral-400 uppercase tracking-wider">Top Referrers</CardTitle>
+            <Card className="lg:col-span-2 glass-navy border-white/5 rounded-2xl overflow-hidden shadow-imperial">
+              <CardHeader className="pb-2 border-b border-white/5 mb-4">
+                <CardTitle className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em]">Origin Sources</CardTitle>
               </CardHeader>
-              <CardContent className="pt-2">
+              <CardContent className="pt-0 px-4">
                 <div className="space-y-1">
                   {displayData.referrers.length > 0 ? displayData.referrers.map((r: any) => (
-                    <div key={r.source} className="flex items-center justify-between py-3 px-2 rounded-lg hover:bg-neutral-800/30 transition-colors">
-                      <span className="text-zinc-200 text-sm font-medium">{r.source}</span>
-                      <div className="flex items-center gap-4">
-                        <span className="text-zinc-400 text-sm w-16 text-right">{r.count}</span>
+                    <div key={r.source} className="flex items-center justify-between py-3 px-4 rounded-xl hover:bg-white/5 transition-all group">
+                      <div className="flex items-center gap-3">
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#c9a84c]/40 group-hover:bg-[#c9a84c] transition-all" />
+                        <span className="text-zinc-200 text-sm font-medium tracking-tight">{r.source}</span>
                       </div>
+                      <span className="text-gradient-gold text-sm font-bold w-16 text-right">{r.count.toLocaleString()}</span>
                     </div>
                   )) : (
-                    <div className="py-12 text-center text-neutral-600 text-sm italic">
-                      No referral data available.
+                    <div className="py-20 text-center text-zinc-600 text-xs italic">
+                      Referral graph empty.
                     </div>
                   )}
                 </div>
@@ -276,25 +293,25 @@ export default function AnalyticsContent() {
           </div>
 
           {/* Geographic Distribution */}
-          <Card className="border border-neutral-800/60 bg-neutral-900/40 backdrop-blur-xl rounded-2xl overflow-hidden">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-semibold text-neutral-400 uppercase tracking-wider flex items-center gap-2">
-                <Globe className="w-4 h-4 text-amber-500" /> Geographic Distribution
+          <Card className="glass-navy border-white/5 rounded-2xl overflow-hidden shadow-imperial">
+            <CardHeader className="pb-2 border-b border-white/5 mb-6">
+              <CardTitle className="text-xs font-bold text-zinc-500 uppercase tracking-[0.2em] flex items-center gap-2">
+                <Globe className="w-4 h-4 text-[#c9a84c] animate-float" /> Global Footprint
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-2">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {displayData.geo.length > 0 ? displayData.geo.map((g: any) => (
-                  <div key={g.country} className="flex items-center justify-between py-3 px-4 rounded-lg bg-neutral-800/20 border border-neutral-800/50 hover:bg-neutral-800/30 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <span className="text-xl">{g.flag || '🌐'}</span>
-                      <span className="text-zinc-200 text-sm font-medium">{g.country}</span>
+                  <div key={g.country} className="flex items-center justify-between py-4 px-6 rounded-2xl bg-white/[0.02] border border-white/5 hover:border-[#c9a84c]/30 hover:bg-white/[0.04] transition-all group shadow-sm">
+                    <div className="flex items-center gap-4">
+                      <span className="text-2xl filter drop-shadow-[0_0_8px_rgba(255,255,255,0.2)] group-hover:scale-110 transition-transform">{g.flag || '🌐'}</span>
+                      <span className="text-zinc-300 text-sm font-bold tracking-tight">{g.country}</span>
                     </div>
-                    <span className="text-amber-400 text-sm font-semibold">{g.count}</span>
+                    <span className="text-gradient-gold text-lg font-black">{g.count}</span>
                   </div>
                 )) : (
-                  <div className="col-span-full py-12 text-center text-neutral-600 text-sm italic">
-                    Waiting for international traffic...
+                  <div className="col-span-full py-16 text-center text-zinc-600 text-sm font-medium italic">
+                    Waiting for international signals...
                   </div>
                 )}
               </div>
@@ -309,20 +326,23 @@ export default function AnalyticsContent() {
 
 function StatCard({ icon, title, value, change, loading }: { icon: React.ReactNode; title: string; value: string; change: string; loading?: boolean }) {
   return (
-    <Card className="border border-neutral-800/60 bg-neutral-900/40 backdrop-blur-xl shadow-lg rounded-2xl relative overflow-hidden group hover:border-amber-500/30 transition-all duration-300">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-xs font-semibold text-neutral-400 uppercase tracking-wider flex items-center gap-2">
-          <span className="text-amber-500">{icon}</span>{title}
+    <Card className="glass-navy border-white/5 shadow-imperial rounded-2xl relative overflow-hidden group hover:border-[#c9a84c]/40 transition-all duration-500 hover:shadow-imperial-hover">
+      {/* Decorative corner accent */}
+      <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-[#c9a84c]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+      
+      <CardHeader className="flex flex-row items-center justify-between pb-3">
+        <CardTitle className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] flex items-center gap-2 transition-colors group-hover:text-zinc-400">
+          <span className="text-[#c9a84c] group-hover:scale-110 transition-transform duration-500">{icon}</span>{title}
         </CardTitle>
-        <div className="text-[10px] bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded-full font-bold border border-emerald-500/20">
+        <div className="text-[10px] bg-[#34d399]/10 text-[#34d399] px-2.5 py-1 rounded-full font-black border border-[#34d399]/20 shadow-[0_0_10px_rgba(52,211,153,0.1)]">
           {change}
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-6">
         {loading ? (
-          <Skeleton className="h-9 w-24 bg-neutral-800" />
+          <Skeleton className="h-10 w-24 bg-white/5 rounded-lg" />
         ) : (
-          <div className="text-3xl font-bold bg-gradient-to-r from-neutral-100 to-neutral-400 bg-clip-text text-transparent">
+          <div className="text-4xl font-black text-gradient-gold tracking-tight">
             {value}
           </div>
         )}
@@ -330,3 +350,4 @@ function StatCard({ icon, title, value, change, loading }: { icon: React.ReactNo
     </Card>
   )
 }
+

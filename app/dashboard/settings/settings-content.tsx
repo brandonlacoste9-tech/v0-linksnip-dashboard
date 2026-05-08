@@ -75,74 +75,77 @@ export default function SettingsContent() {
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-[#0a0a0a] text-neutral-200 overflow-hidden relative">
-      {/* Background Effects */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-amber-600/5 blur-[120px] pointer-events-none" />
+    <div className="flex-1 flex flex-col h-full bg-[#0a0e1a] text-zinc-300 overflow-hidden relative">
+      {/* Background Decorative Glows */}
+      <div className="absolute top-[-15%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#c9a84c]/5 blur-[120px] pointer-events-none animate-breathe" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#c9a84c]/3 blur-[100px] pointer-events-none" />
 
       {/* Header */}
-      <header className="h-20 border-b border-neutral-800/60 bg-neutral-950/50 backdrop-blur-md flex items-center justify-between px-8 shrink-0 z-10">
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="text-neutral-400 hover:text-white" asChild>
+      <header className="h-20 border-b border-white/5 bg-[#0d1221]/80 backdrop-blur-xl flex items-center justify-between px-8 shrink-0 z-20 shadow-imperial">
+        <div className="flex items-center gap-6">
+          <Button variant="ghost" size="icon" className="text-zinc-500 hover:text-[#c9a84c] hover:bg-[#c9a84c]/10 rounded-xl transition-all" asChild>
             <Link href="/dashboard"><ArrowLeft className="w-5 h-5" /></Link>
           </Button>
           <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-neutral-100 to-neutral-400 bg-clip-text text-transparent">
-              Access Control
+            <h1 className="text-2xl font-bold text-gradient-gold tracking-tight">
+              Access Governance
             </h1>
+            <p className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] font-medium mt-0.5">Sovereign Identity Management</p>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
-        <div className="max-w-4xl mx-auto space-y-8">
+      <div className="flex-1 overflow-y-auto p-8 scrollbar-imperial custom-scrollbar">
+        <div className="max-w-5xl mx-auto space-y-10 animate-float">
           
           {/* Info Card */}
-          <Card className="border border-amber-500/20 bg-amber-500/5 rounded-2xl overflow-hidden">
-            <CardContent className="p-6 flex gap-4 items-start">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center shrink-0 border border-amber-500/20">
-                <Shield className="w-5 h-5 text-amber-500" />
+          <Card className="glass-navy border-[#c9a84c]/20 bg-[#c9a84c]/5 rounded-2xl overflow-hidden shadow-imperial relative group">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#c9a84c]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+            <CardContent className="p-8 flex gap-6 items-start relative z-10">
+              <div className="w-12 h-12 rounded-2xl bg-[#c9a84c]/10 flex items-center justify-center shrink-0 border border-[#c9a84c]/20 shadow-glow-gold">
+                <Shield className="w-6 h-6 text-[#c9a84c]" />
               </div>
-              <div className="space-y-1">
-                <h3 className="font-bold text-amber-50">Sovereign Governance</h3>
-                <p className="text-sm text-neutral-400 leading-relaxed">
-                  Managing access to your LinkSnip instance. Authorized users can access the dashboard and analytics. 
-                  Users defined in your <code className="text-amber-500/80">AUTHORIZED_USER_IDS</code> environment variable act as master admins and cannot be removed here.
+              <div className="space-y-2">
+                <h3 className="text-lg font-bold text-[#e5c76b] tracking-tight">Sovereign Protocol Enforcement</h3>
+                <p className="text-sm text-zinc-400 leading-relaxed max-w-2xl">
+                  Define the inner circle of your LinkSnip instance. Authorized identities gain full administrative rights over redirection sequences and click telemetry. 
+                  Master identities defined via <code className="text-[#c9a84c] bg-[#c9a84c]/10 px-1.5 py-0.5 rounded font-mono text-[11px]">AUTHORIZED_USER_IDS</code> inherit permanent sovereignty.
                 </p>
               </div>
             </CardContent>
           </Card>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
             {/* Add User Form */}
-            <Card className="lg:col-span-1 border border-neutral-800/60 bg-neutral-900/40 backdrop-blur-xl rounded-2xl shadow-xl h-fit">
-              <CardHeader>
-                <CardTitle className="text-lg font-bold text-neutral-100">Authorize User</CardTitle>
-                <CardDescription className="text-neutral-500 text-xs">Grant dashboard access to a new member.</CardDescription>
+            <Card className="lg:col-span-2 glass-navy border-white/5 rounded-2xl shadow-imperial h-fit sticky top-0 group hover:border-[#c9a84c]/30 transition-all duration-500">
+              <CardHeader className="border-b border-white/5 mb-6">
+                <CardTitle className="text-sm font-bold text-zinc-400 uppercase tracking-[0.2em]">Authorize Identity</CardTitle>
+                <CardDescription className="text-zinc-500 text-xs mt-2">Grant cryptographic access to a new administrator.</CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleAddUser} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label className="text-xs text-neutral-400 uppercase tracking-widest font-bold">Clerk User ID</Label>
-                    <div className="relative group">
-                      <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500 group-focus-within:text-amber-500 transition-colors" />
+                <form onSubmit={handleAddUser} className="space-y-6">
+                  <div className="space-y-3">
+                    <Label className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] font-black">Clerk Identity ID</Label>
+                    <div className="relative group/input">
+                      <Key className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within/input:text-[#c9a84c] transition-colors" />
                       <Input 
                         placeholder="user_2p..." 
                         required 
-                        className="pl-10 bg-black/50 border-neutral-800 focus-visible:ring-amber-500/50 rounded-xl h-11"
+                        className="pl-12 bg-black/40 border-white/5 focus-visible:ring-[#c9a84c]/50 focus-visible:border-[#c9a84c]/50 rounded-xl h-12 text-sm transition-all"
                         value={formData.clerkId}
                         onChange={(e) => setFormData({...formData, clerkId: e.target.value})}
                       />
                     </div>
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-xs text-neutral-400 uppercase tracking-widest font-bold">Email (Optional)</Label>
-                    <div className="relative group">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500 group-focus-within:text-amber-500 transition-colors" />
+                  <div className="space-y-3">
+                    <Label className="text-[10px] text-zinc-500 uppercase tracking-[0.2em] font-black">Communication Channel</Label>
+                    <div className="relative group/input">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600 group-focus-within/input:text-[#c9a84c] transition-colors" />
                       <Input 
                         type="email"
-                        placeholder="admin@example.com" 
-                        className="pl-10 bg-black/50 border-neutral-800 focus-visible:ring-amber-500/50 rounded-xl h-11"
+                        placeholder="admin@sovereign.link" 
+                        className="pl-12 bg-black/40 border-white/5 focus-visible:ring-[#c9a84c]/50 focus-visible:border-[#c9a84c]/50 rounded-xl h-12 text-sm transition-all"
                         value={formData.email}
                         onChange={(e) => setFormData({...formData, email: e.target.value})}
                       />
@@ -151,50 +154,50 @@ export default function SettingsContent() {
                   <Button 
                     type="submit" 
                     disabled={isSubmitting}
-                    className="w-full bg-gradient-to-r from-amber-500 to-amber-600 text-neutral-950 hover:from-amber-400 hover:to-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.2)] font-bold rounded-xl h-11 transition-all"
+                    className="w-full bg-gradient-to-r from-[#c9a84c] to-[#a68a3d] text-[#0a0e1a] hover:from-[#d4b44e] hover:to-[#c9a84c] shadow-imperial font-black rounded-xl h-12 transition-all active:scale-[0.98] group"
                   >
-                    {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <><UserPlus className="w-4 h-4 mr-2" /> Authorize</>}
+                    {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <><UserPlus className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" /> Commit Authorization</>}
                   </Button>
                 </form>
               </CardContent>
             </Card>
 
             {/* Users List */}
-            <Card className="lg:col-span-2 border border-neutral-800/60 bg-neutral-900/40 backdrop-blur-xl rounded-2xl shadow-xl">
-              <CardHeader className="flex flex-row items-center justify-between">
+            <Card className="lg:col-span-3 glass-navy border-white/5 rounded-2xl shadow-imperial">
+              <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 mb-6">
                 <div>
-                  <CardTitle className="text-lg font-bold text-neutral-100">Access List</CardTitle>
-                  <CardDescription className="text-neutral-500 text-xs">Users with database-level authorization.</CardDescription>
+                  <CardTitle className="text-sm font-bold text-zinc-400 uppercase tracking-[0.2em]">Authorized Circle</CardTitle>
+                  <CardDescription className="text-zinc-500 text-xs mt-2">Identities with verified database sovereignty.</CardDescription>
                 </div>
-                <Badge variant="outline" className="bg-neutral-800/50 text-neutral-400 border-neutral-700">
-                  {users.length} Active
+                <Badge variant="outline" className="bg-white/5 text-[#c9a84c] border-[#c9a84c]/30 font-black text-[10px] px-3 py-1 rounded-lg">
+                  {users.length} Verified
                 </Badge>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
+              <CardContent className="px-6">
+                <div className="space-y-4">
                   {loading ? (
-                    Array.from({ length: 3 }).map((_, i) => (
-                      <div key={i} className="h-16 rounded-xl bg-neutral-800/50 animate-pulse border border-neutral-800" />
+                    Array.from({ length: 4 }).map((_, i) => (
+                      <div key={i} className="h-20 rounded-2xl bg-white/[0.02] animate-pulse border border-white/5" />
                     ))
                   ) : users.length > 0 ? (
                     users.map((user) => (
-                      <div key={user.id} className="flex items-center justify-between p-4 rounded-xl bg-neutral-950/40 border border-neutral-800/60 group hover:border-amber-500/30 transition-all">
-                        <div className="flex items-center gap-4">
-                          <div className="w-10 h-10 rounded-full bg-neutral-900 border border-neutral-800 flex items-center justify-center shadow-inner">
-                            <ShieldCheck className="w-5 h-5 text-neutral-600 group-hover:text-amber-500 transition-colors" />
+                      <div key={user.id} className="flex items-center justify-between p-5 rounded-2xl bg-white/[0.02] border border-white/5 group hover:border-[#c9a84c]/30 hover:bg-white/[0.04] transition-all shadow-sm">
+                        <div className="flex items-center gap-5">
+                          <div className="w-12 h-12 rounded-2xl bg-[#0d1221] border border-white/5 flex items-center justify-center shadow-inner group-hover:border-[#c9a84c]/20 transition-all">
+                            <ShieldCheck className="w-6 h-6 text-zinc-600 group-hover:text-[#c9a84c] transition-all duration-500" />
                           </div>
                           <div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm font-bold text-neutral-200">{user.email || 'System User'}</span>
-                              <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20 text-[10px] py-0 px-2 h-4">{user.role}</Badge>
+                            <div className="flex items-center gap-3">
+                              <span className="text-sm font-black text-zinc-200 tracking-tight">{user.email || 'System Identity'}</span>
+                              <Badge className="bg-[#c9a84c]/10 text-[#c9a84c] border-[#c9a84c]/20 text-[9px] font-black uppercase tracking-widest py-0.5 px-2 rounded-md">{user.role}</Badge>
                             </div>
-                            <p className="text-[10px] text-neutral-600 font-mono mt-0.5">{user.clerkId}</p>
+                            <p className="text-[10px] text-zinc-600 font-mono mt-1 opacity-70 tracking-tight">{user.clerkId}</p>
                           </div>
                         </div>
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="text-neutral-600 hover:text-red-400 hover:bg-red-400/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
+                          className="text-zinc-700 hover:text-red-400 hover:bg-red-400/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300"
                           onClick={() => handleRemoveUser(user.id)}
                         >
                           <Trash2 className="w-4 h-4" />
@@ -202,9 +205,14 @@ export default function SettingsContent() {
                       </div>
                     ))
                   ) : (
-                    <div className="py-12 text-center space-y-3 border-2 border-dashed border-neutral-800 rounded-2xl">
-                      <AlertTriangle className="w-8 h-8 text-neutral-700 mx-auto" />
-                      <p className="text-sm text-neutral-500">No database-level users authorized yet.</p>
+                    <div className="py-20 text-center space-y-6 border-2 border-dashed border-white/5 rounded-3xl group hover:border-[#c9a84c]/20 transition-all duration-700">
+                      <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto border border-white/5 shadow-inner group-hover:scale-110 transition-transform duration-700">
+                        <AlertTriangle className="w-8 h-8 text-zinc-800" />
+                      </div>
+                      <div className="space-y-2">
+                        <p className="text-sm font-bold text-zinc-500">Universal Vacuum Detected</p>
+                        <p className="text-xs text-zinc-600 max-w-[200px] mx-auto">No external identities have been granted sovereignty over this instance yet.</p>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -215,10 +223,10 @@ export default function SettingsContent() {
       </div>
 
       <style dangerouslySetInnerHTML={{__html: `
-        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #444; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.05); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(201,168,76,0.2); }
       `}} />
     </div>
   )

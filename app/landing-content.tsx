@@ -35,7 +35,7 @@ export default function LandingContent({ userId }: { userId: string | null }) {
             <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center">
               <Link2 className="w-5 h-5 text-black" />
             </div>
-            <span className="font-bold text-xl tracking-wider text-amber-50">LINKSNIP</span>
+            <span className="font-bold text-xl tracking-wider text-amber-50">MARK PROTOCOL</span>
           </div>
 
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-zinc-400">
@@ -141,13 +141,13 @@ export default function LandingContent({ userId }: { userId: string | null }) {
             <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-zinc-900">
               <img 
                 src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&auto=format&fit=crop" 
-                alt="LinkSnip Dashboard" 
+                alt="Mark Protocol Dashboard" 
                 className="object-cover w-full h-full opacity-80 group-hover:opacity-100 transition-opacity duration-700"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
             </div>
           </div>
-          <p className="text-zinc-500 text-sm mb-20 tracking-wide uppercase font-bold">Private Command Center</p>
+          <p className="text-zinc-500 text-sm mb-20 tracking-wide uppercase font-bold">Imperial Command Center</p>
 
           {/* Sovereign Vault Section */}
           <div id="vault" className="mx-auto max-w-6xl mb-32">
@@ -218,7 +218,7 @@ export default function LandingContent({ userId }: { userId: string | null }) {
               <div className="w-8 h-8 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center">
                 <Link2 className="w-5 h-5 text-black" />
               </div>
-              <span className="font-bold text-xl tracking-wider text-amber-50">LINKSNIP</span>
+              <span className="font-bold text-xl tracking-wider text-amber-50">MARK PROTOCOL</span>
             </div>
             <p className="text-zinc-500 text-sm leading-relaxed">{t.hero.subtitle}</p>
           </div>
@@ -226,9 +226,9 @@ export default function LandingContent({ userId }: { userId: string | null }) {
           <div className="space-y-4">
             <h4 className="text-white font-bold uppercase tracking-widest text-xs">Infrastructure</h4>
             <div className="text-zinc-500 text-sm space-y-1">
-              <p className="font-bold text-zinc-300">LinkSnip™ by Northern Ventures / Moltbot Inc.</p>
+              <p className="font-bold text-zinc-300">Mark Protocol™ by Northern Ventures / Moltbot Inc.</p>
               <p>{t.footer.location}</p>
-              <p className="pt-2">contact@linksnip.ca</p>
+              <p className="pt-2">contact@markprotocol.io</p>
             </div>
           </div>
 

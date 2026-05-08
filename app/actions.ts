@@ -165,7 +165,7 @@ export async function incrementLinkClicks(code: string): Promise<boolean> {
   }
 }
 
-export async function logClick(code: string) {
+export async function logClick(code: string, visitorHash?: string) {
   try {
     const headersList = await headers()
     const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip')
@@ -177,10 +177,11 @@ export async function logClick(code: string) {
     const link = await getLinkByCode(code)
     if (!link) return
 
-    // Log the granular click
+    // Log the granular click with decoupled identity
     await db.insert(clicks).values({
       linkId: link.id,
       ipAddress: ip,
+      visitorHash: visitorHash || null,
       country,
       userAgent,
       referrer,
@@ -192,6 +193,53 @@ export async function logClick(code: string) {
   } catch (error) {
     console.error('Error logging click:', error)
     return null
+  }
+}
+
+// ─── Sovereign Bridge Management ─────────────────────────────────────────────
+
+export async function getBridgeTokens() {
+  const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  try {
+    return await db.select().from(bridgeTokens).where(eq(bridgeTokens.userId, userId)).orderBy(desc(bridgeTokens.createdAt))
+  } catch (error) {
+    console.error('Error fetching bridge tokens:', error)
+    return []
+  }
+}
+
+export async function createBridgeToken(name: string) {
+  const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  const token = `ls_${Math.random().toString(36).substring(2)}${Math.random().toString(36).substring(2)}`
+  
+  try {
+    const [newToken] = await db.insert(bridgeTokens).values({
+      name,
+      token,
+      userId,
+      expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
+    }).returning()
+    return newToken
+  } catch (error) {
+    console.error('Error creating bridge token:', error)
+    throw new Error('Failed to generate token')
+  }
+}
+
+export async function revokeBridgeToken(id: number) {
+  const { userId } = await auth()
+  if (!userId) throw new Error('Unauthorized')
+
+  try {
+    await db.delete(bridgeTokens).where(and(eq(bridgeTokens.id, id), eq(bridgeTokens.userId, userId)))
+    return true
+  } catch (error) {
+    console.error('Error revoking bridge token:', error)
+    return false
   }
 }
 

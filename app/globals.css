@@ -40,43 +40,71 @@
 }
 
 .dark {
-  /* Cognac dark palette
-     Background: deep espresso-brown
-     Primary accent: burnished cognac / amber
-     Surfaces: warm dark brown tiers
+  /* ═══════════════════════════════════════════════════════
+     IMPERIAL LUXURY PALETTE — Deep Navy & Sovereign Gold
+     ═══════════════════════════════════════════════════════
+     Background: deep midnight navy    (#0a0e1a → #0d1221)
+     Primary:    sovereign gold        (#c9a84c → #e5c76b)
+     Surfaces:   stratified navy tiers (#111827 → #1a2236)
+     Accents:    champagne highlights  (#f5e6b8)
   */
-  --background: oklch(0.17 0.03 45);
-  --foreground: oklch(0.92 0.04 65);
-  --card: oklch(0.21 0.04 45);
-  --card-foreground: oklch(0.92 0.04 65);
-  --popover: oklch(0.19 0.04 45);
-  --popover-foreground: oklch(0.92 0.04 65);
-  --primary: oklch(0.68 0.14 48);
-  --primary-foreground: oklch(0.12 0.02 45);
-  --secondary: oklch(0.27 0.05 45);
-  --secondary-foreground: oklch(0.88 0.04 65);
-  --muted: oklch(0.25 0.04 45);
-  --muted-foreground: oklch(0.62 0.06 55);
-  --accent: oklch(0.72 0.16 52);
-  --accent-foreground: oklch(0.12 0.02 45);
+  --background: oklch(0.13 0.025 260);
+  --foreground: oklch(0.93 0.01 80);
+  --card: oklch(0.17 0.03 255);
+  --card-foreground: oklch(0.93 0.01 80);
+  --popover: oklch(0.15 0.03 258);
+  --popover-foreground: oklch(0.93 0.01 80);
+  --primary: oklch(0.73 0.12 85);
+  --primary-foreground: oklch(0.13 0.025 260);
+  --secondary: oklch(0.22 0.035 255);
+  --secondary-foreground: oklch(0.88 0.02 80);
+  --muted: oklch(0.20 0.03 258);
+  --muted-foreground: oklch(0.58 0.03 250);
+  --accent: oklch(0.78 0.14 85);
+  --accent-foreground: oklch(0.13 0.025 260);
   --destructive: oklch(0.5 0.2 25);
   --destructive-foreground: oklch(0.95 0 0);
-  --border: oklch(0.29 0.05 45);
-  --input: oklch(0.27 0.05 45);
-  --ring: oklch(0.68 0.14 48);
-  --chart-1: oklch(0.72 0.16 52);
-  --chart-2: oklch(0.62 0.13 38);
-  --chart-3: oklch(0.55 0.1 28);
-  --chart-4: oklch(0.78 0.12 68);
-  --chart-5: oklch(0.5 0.09 20);
-  --sidebar: oklch(0.19 0.04 45);
-  --sidebar-foreground: oklch(0.92 0.04 65);
-  --sidebar-primary: oklch(0.68 0.14 48);
-  --sidebar-primary-foreground: oklch(0.12 0.02 45);
-  --sidebar-accent: oklch(0.27 0.05 45);
-  --sidebar-accent-foreground: oklch(0.88 0.04 65);
-  --sidebar-border: oklch(0.29 0.05 45);
-  --sidebar-ring: oklch(0.68 0.14 48);
+  --border: oklch(0.25 0.035 255);
+  --input: oklch(0.22 0.035 255);
+  --ring: oklch(0.73 0.12 85);
+  --chart-1: oklch(0.78 0.14 85);
+  --chart-2: oklch(0.65 0.10 70);
+  --chart-3: oklch(0.55 0.08 250);
+  --chart-4: oklch(0.70 0.12 95);
+  --chart-5: oklch(0.50 0.06 260);
+  --sidebar: oklch(0.12 0.028 262);
+  --sidebar-foreground: oklch(0.93 0.01 80);
+  --sidebar-primary: oklch(0.73 0.12 85);
+  --sidebar-primary-foreground: oklch(0.13 0.025 260);
+  --sidebar-accent: oklch(0.22 0.035 255);
+  --sidebar-accent-foreground: oklch(0.88 0.02 80);
+  --sidebar-border: oklch(0.25 0.035 255);
+  --sidebar-ring: oklch(0.73 0.12 85);
+
+  /* Imperial Gold Hex Tokens (for direct use in Tailwind arbitrary values) */
+  --gold-50: #fdf8e8;
+  --gold-100: #f5e6b8;
+  --gold-200: #ecd888;
+  --gold-300: #e5c76b;
+  --gold-400: #d4b44e;
+  --gold-500: #c9a84c;
+  --gold-600: #a88b3a;
+  --gold-700: #876e2e;
+  --gold-800: #665322;
+  --gold-900: #453816;
+
+  /* Deep Navy Hex Tokens */
+  --navy-50: #e8eaf0;
+  --navy-100: #c5c9d8;
+  --navy-200: #9ea5be;
+  --navy-300: #7781a4;
+  --navy-400: #586591;
+  --navy-500: #39497e;
+  --navy-600: #334276;
+  --navy-700: #2b396b;
+  --navy-800: #1a2236;
+  --navy-900: #0d1221;
+  --navy-950: #0a0e1a;
 }
 
 @theme inline {
@@ -127,5 +155,153 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   IMPERIAL LUXURY UTILITIES — Skeuomorphic Depth & Glassmorphism
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@layer utilities {
+  /* ─── Sovereign Card Shadows ────────────────────────────────────────────
+     Multi-layered box-shadows that create depth illusion on dark backgrounds.
+     Replaces flat borders with glossy, embossed surfaces.
+  */
+  .shadow-imperial {
+    box-shadow:
+      0 1px 0 0 rgba(201, 168, 76, 0.05) inset,
+      0 -1px 0 0 rgba(0, 0, 0, 0.3) inset,
+      0 4px 6px -1px rgba(0, 0, 0, 0.4),
+      0 12px 24px -4px rgba(0, 0, 0, 0.3),
+      0 0 0 1px rgba(201, 168, 76, 0.08);
+  }
+
+  .shadow-imperial-hover {
+    box-shadow:
+      0 1px 0 0 rgba(201, 168, 76, 0.1) inset,
+      0 -1px 0 0 rgba(0, 0, 0, 0.4) inset,
+      0 8px 16px -2px rgba(0, 0, 0, 0.5),
+      0 20px 40px -8px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(201, 168, 76, 0.15),
+      0 0 30px -5px rgba(201, 168, 76, 0.1);
+  }
+
+  .shadow-imperial-elevated {
+    box-shadow:
+      0 2px 0 0 rgba(201, 168, 76, 0.08) inset,
+      0 -2px 0 0 rgba(0, 0, 0, 0.5) inset,
+      0 12px 24px -4px rgba(0, 0, 0, 0.6),
+      0 24px 48px -8px rgba(0, 0, 0, 0.4),
+      0 0 0 1px rgba(201, 168, 76, 0.12),
+      0 0 60px -10px rgba(201, 168, 76, 0.15);
+  }
+
+  /* ─── Gold Glow Effects ─────────────────────────────────────────────────
+     Ambient glow for CTAs and interactive gold elements.
+  */
+  .glow-gold {
+    box-shadow:
+      0 0 15px rgba(201, 168, 76, 0.25),
+      0 0 30px rgba(201, 168, 76, 0.1);
+  }
+
+  .glow-gold-intense {
+    box-shadow:
+      0 0 20px rgba(201, 168, 76, 0.4),
+      0 0 40px rgba(201, 168, 76, 0.2),
+      0 0 80px rgba(201, 168, 76, 0.1);
+  }
+
+  /* ─── Glassmorphism Surfaces ────────────────────────────────────────────
+     Frosted glass panels for overlays, modals, and floating cards.
+  */
+  .glass-navy {
+    background: rgba(13, 18, 33, 0.75);
+    backdrop-filter: blur(20px) saturate(1.8);
+    -webkit-backdrop-filter: blur(20px) saturate(1.8);
+    border: 1px solid rgba(201, 168, 76, 0.08);
+  }
+
+  .glass-navy-dense {
+    background: rgba(10, 14, 26, 0.88);
+    backdrop-filter: blur(40px) saturate(2);
+    -webkit-backdrop-filter: blur(40px) saturate(2);
+    border: 1px solid rgba(201, 168, 76, 0.06);
+  }
+
+  /* ─── Imperial Gradient Texts ───────────────────────────────────────────
+     Luxury gradient fills for headings and hero text.
+  */
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #e5c76b 0%, #c9a84c 50%, #a88b3a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-silver {
+    background: linear-gradient(135deg, #f0f0f0 0%, #a0a0a0 50%, #d0d0d0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ─── Imperial Border Gradients ─────────────────────────────────────────
+     Subtle gold-to-transparent borders for premium card edges.
+  */
+  .border-gradient-gold {
+    border-image: linear-gradient(
+      180deg,
+      rgba(201, 168, 76, 0.3) 0%,
+      rgba(201, 168, 76, 0.05) 100%
+    ) 1;
+  }
+
+  /* ─── Micro-animations ──────────────────────────────────────────────────
+     Subtle breathing and shimmer effects for premium feel.
+  */
+  .animate-shimmer {
+    background-size: 200% 100%;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+
+  @keyframes shimmer {
+    0%, 100% { background-position: -200% 0; }
+    50% { background-position: 200% 0; }
+  }
+
+  .animate-breathe {
+    animation: breathe 4s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  /* ─── Scrollbar Styling ─────────────────────────────────────────────────
+     Custom scrollbar to match the imperial aesthetic.
+  */
+  .scrollbar-imperial::-webkit-scrollbar {
+    width: 6px;
+  }
+  .scrollbar-imperial::-webkit-scrollbar-track {
+    background: rgba(10, 14, 26, 0.5);
+  }
+  .scrollbar-imperial::-webkit-scrollbar-thumb {
+    background: rgba(201, 168, 76, 0.2);
+    border-radius: 10px;
+  }
+  .scrollbar-imperial::-webkit-scrollbar-thumb:hover {
+    background: rgba(201, 168, 76, 0.4);
   }
 }
