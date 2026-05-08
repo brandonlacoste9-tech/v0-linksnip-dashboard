@@ -1,3 +1,4 @@
+import { useState, useEffect, useMemo } from "react"
 import { 
   Plus, Copy, MoreVertical, Search, Wand2, 
   ExternalLink, TrendingUp, Download, BarChart3, Settings, Activity, Terminal, Globe, 
