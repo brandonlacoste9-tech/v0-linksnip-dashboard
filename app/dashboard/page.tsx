@@ -5,6 +5,8 @@ import { ImperialConsole } from "@/components/mrk/ImperialConsole";
 import { AggregationEngine } from "@/lib/mrk/intelligence/AggregationEngine";
 import { TrustDelegationEngine } from "@/lib/mrk/trust/TrustDelegationEngine";
 import { startRegistration } from "@simplewebauthn/browser";
+import { LinksManager } from "@/components/dashboard/LinksManager";
+import { BridgeManager } from "@/components/dashboard/BridgeManager";
 import { 
   isChainIntactAction,
   emitDelegationInviteAction,
@@ -39,6 +41,8 @@ function getEngines() {
   return { aggregationEngine, trustEngine: trustEngineProxy };
 }
 
+type DashboardTab = "links" | "security" | "bridge";
+
 export default function DashboardPage() {
   const [engines, setEngines] = useState<{
     aggregationEngine: AggregationEngine;
@@ -47,6 +51,7 @@ export default function DashboardPage() {
 
   const [originHash, setOriginHash] = useState<string>("");
   const [isMinting, setIsMinting] = useState(false);
+  const [activeTab, setActiveTab] = useState<DashboardTab>("links");
 
   useEffect(() => {
     const { aggregationEngine, trustEngine } = getEngines();
@@ -156,39 +161,70 @@ export default function DashboardPage() {
     );
   }
 
-  if (originHash.startsWith("ERROR:")) {
-    return (
-      <div className="min-h-screen bg-navy-950 flex flex-col items-center justify-center p-8 text-center">
-        <p className="font-serif text-xl tracking-[0.3em] text-red-500 mb-4">
-          NEXUS DISCONNECTED
-        </p>
-        <p className="font-mono text-sm text-red-400/80">
-          {originHash}
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <ImperialConsole
-      aggregationEngine={engines.aggregationEngine}
-      trustEngine={engines.trustEngine}
-      originHash={originHash}
-      onEmitInvite={async () => {
-        try {
-          const invite = await engines.trustEngine.emitDelegationInvite(originHash);
-          console.log("Invite emitted:", invite);
-        } catch (e) {
-          console.error(e);
-        }
-      }}
-      onRevokeTrustAnchor={async (hash: string) => {
-        try {
-          await engines.trustEngine.revokeTrustAnchor(hash, originHash);
-        } catch (e) {
-          console.error(e);
-        }
-      }}
-    />
+    <div className="min-h-screen bg-black">
+      {/* Top Navigation */}
+      <div className="bg-zinc-950 border-b border-zinc-900 px-8 h-16 flex items-center justify-between sticky top-0 z-50">
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-amber-500 rounded flex items-center justify-center">
+              <span className="font-black text-black">M</span>
+            </div>
+            <span className="font-black text-white tracking-widest text-lg uppercase">LinkSnip</span>
+          </div>
+
+          <nav className="flex gap-1">
+            {(["links", "security", "bridge"] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-2 font-mono text-[10px] tracking-[0.2em] uppercase transition-all ${
+                  activeTab === tab
+                    ? "text-amber-400 bg-amber-500/5 border-b-2 border-amber-500"
+                    : "text-zinc-500 hover:text-zinc-300"
+                }`}
+              >
+                {tab}
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        <div className="flex items-center gap-4 text-zinc-500 font-mono text-[10px] uppercase tracking-widest">
+          <span className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+            Vercel Edge Active
+          </span>
+        </div>
+      </div>
+
+      <div className="max-w-[1600px] mx-auto p-8">
+        {activeTab === "links" && <LinksManager />}
+        
+        {activeTab === "security" && (
+          <ImperialConsole
+            aggregationEngine={engines.aggregationEngine}
+            trustEngine={engines.trustEngine}
+            originHash={originHash}
+            onEmitInvite={async () => {
+              try {
+                await engines.trustEngine.emitDelegationInvite(originHash);
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+            onRevokeTrustAnchor={async (hash: string) => {
+              try {
+                await engines.trustEngine.revokeTrustAnchor(hash, originHash);
+              } catch (e) {
+                console.error(e);
+              }
+            }}
+          />
+        )}
+
+        {activeTab === "bridge" && <BridgeManager />}
+      </div>
+    </div>
   );
 }
