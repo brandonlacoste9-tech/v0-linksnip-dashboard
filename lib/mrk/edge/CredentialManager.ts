@@ -46,7 +46,7 @@ export class CredentialManager {
     const options = await generateRegistrationOptions({
       rpName: 'MRK Protocol Sovereign Vault',
       rpID: this.RP_ID,
-      userID: user.id,
+      userID: new TextEncoder().encode(user.id),
       userName: user.username,
       attestationType: 'none',
       authenticatorSelection: {
