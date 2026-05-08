@@ -148,16 +148,16 @@ export async function verifyWebAuthnRegistrationAction(attResp: any) {
 }
 
 export async function getHandshakeEventsAction() {
-  const recentClicks = await db.select().from(clicks).orderBy(desc(clicks.createdAt)).limit(100);
+  const recentClicks = await db.select().from(clicks).orderBy(desc(clicks.timestamp)).limit(100);
   
   return recentClicks.map(click => ({
     eventId: String(click.id),
-    timestamp: click.createdAt.getTime(),
+    timestamp: click.timestamp.getTime(),
     // Ensure identityHash is a valid 64-char hex string
     identityHash: click.visitorHash && /^[a-f0-9]{64}$/.test(click.visitorHash) 
       ? click.visitorHash 
       : "0000000000000000000000000000000000000000000000000000000000000000",
-    saltWindowId: Math.floor(click.createdAt.getTime() / (24 * 60 * 60 * 1000)),
+    saltWindowId: Math.floor(click.timestamp.getTime() / (24 * 60 * 60 * 1000)),
     trustDepth: 0,
     linkTier: "public" as const,
     geoRegion: "UNKNOWN" as const,
