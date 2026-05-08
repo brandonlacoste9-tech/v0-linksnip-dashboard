@@ -48,14 +48,19 @@ export default function DashboardPage() {
     setEngines({ aggregationEngine, trustEngine });
 
     const initEngine = async () => {
-      // Seed a demo Origin trust anchor if none exists
-      const existingOrigins = await trustEngine.getAnonymizedCohortStats();
-      let activeOriginHash = "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2";
-      if (existingOrigins.totalOrigins === 0) {
-        // In a real app, this would be fetched from the backend after WebAuthn enrollment
-        await trustEngine.mintOriginAnchor(activeOriginHash, "demo-credential-id");
+      try {
+        // Seed a demo Origin trust anchor if none exists
+        const existingOrigins = await trustEngine.getAnonymizedCohortStats();
+        let activeOriginHash = "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2";
+        if (existingOrigins.totalOrigins === 0) {
+          // In a real app, this would be fetched from the backend after WebAuthn enrollment
+          await trustEngine.mintOriginAnchor(activeOriginHash, "demo-credential-id");
+        }
+        setOriginHash(activeOriginHash);
+      } catch (err: any) {
+        console.error("Failed to initialize Imperial Console:", err);
+        setOriginHash("ERROR: " + err.message);
       }
-      setOriginHash(activeOriginHash);
     };
 
     initEngine();
@@ -89,6 +94,19 @@ export default function DashboardPage() {
       <div className="min-h-screen bg-navy-950 flex items-center justify-center">
         <p className="font-serif text-sm tracking-[0.3em] text-gold-400 animate-pulse">
           LOADING IMPERIAL CONSOLE
+        </p>
+      </div>
+    );
+  }
+
+  if (originHash.startsWith("ERROR:")) {
+    return (
+      <div className="min-h-screen bg-navy-950 flex flex-col items-center justify-center p-8 text-center">
+        <p className="font-serif text-xl tracking-[0.3em] text-red-500 mb-4">
+          NEXUS DISCONNECTED
+        </p>
+        <p className="font-mono text-sm text-red-400/80">
+          {originHash}
         </p>
       </div>
     );
