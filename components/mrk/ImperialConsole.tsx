@@ -38,10 +38,10 @@ export const ImperialConsole = ({
           <SentinelShield state="dormant" />
           <div>
             <h1 className="font-serif text-2xl tracking-[0.2em] text-gold-400">
-              IMPERIAL CONSOLE
+              SECURITY DASHBOARD
             </h1>
             <p className="font-mono text-[10px] tracking-wider text-gold-500/30">
-              MRK PROTOCOL · SOVEREIGN TRUST INFRASTRUCTURE
+              NETWORK SECURITY & AUTHENTICATION
             </p>
           </div>
         </div>
@@ -86,16 +86,14 @@ export const ImperialConsole = ({
         )}
       </div>
 
-      {/* Bottom Status Bar */}
-      <div className="fixed bottom-0 left-0 right-0 bg-navy-900/95 backdrop-blur-xl border-t border-gold-500/10 px-8 py-2 flex items-center justify-between">
+    <div className="fixed bottom-0 left-0 right-0 bg-navy-900/95 backdrop-blur-xl border-t border-gold-500/10 px-8 py-2 flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <StatusItem label="EDGE POPs" value="37 ACTIVE" />
-          <StatusItem label="GHOST VAULT" value="ROTATING" />
-          <StatusItem label="TRUST CHAINS" value={`${cohortStats.totalOrigins} ORIGINS`} />
-          <StatusItem label="TOTAL HANDLED" value={aggregationEngine.getTotalProcessed().toLocaleString()} />
+          <StatusItem label="STATUS" value="OPERATIONAL" />
+          <StatusItem label="KEYS" value={`${cohortStats.totalOrigins} ACTIVE`} />
+          <StatusItem label="TOTAL CLICKS" value={aggregationEngine.getTotalProcessed().toLocaleString()} />
         </div>
         <div className="flex items-center gap-4">
-          <StatusItem label="LAST PURGE" value="12M AGO" />
+          <StatusItem label="ENFORCEMENT" value="HARDWARE-BACKED" />
           <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
         </div>
       </div>
@@ -114,7 +112,7 @@ const ThreatIntelligencePanel = ({ engine }: { engine: AggregationEngine }) => {
   return (
     <div className="bg-navy-950/80 backdrop-blur-xl border border-gold-500/10 rounded-2xl p-8">
       <h3 className="font-serif text-sm tracking-[0.3em] text-gold-400 uppercase mb-6">
-        Threat Intelligence Surface
+        Traffic Intelligence
       </h3>
       <p className="font-mono text-xs text-gold-500/40">
         Global threat feed integration pending. Aggregating handshake velocity and anomaly patterns.

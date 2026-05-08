@@ -144,18 +144,18 @@ export default function DashboardPage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
           </svg>
         </div>
-        <p className="font-serif text-xl tracking-[0.3em] text-gold-400 mb-2">
-          BIOMETRIC LOCK ENGAGED
+        <p className="font-serif text-xl tracking-[0.3em] text-gold-400 mb-2 uppercase">
+          Security Key Required
         </p>
         <p className="font-mono text-sm text-slate-400 mb-12 max-w-md">
-          The Imperial Console requires a Sovereign Trust Anchor to initialize. Please authenticate using your hardware security key or biometric sensor.
+          This dashboard is protected by hardware-backed authentication. Please verify your security key to continue.
         </p>
         <button 
           onClick={handleBiometricEnrollment}
           disabled={isMinting}
-          className="px-8 py-3 border border-gold-400/50 text-gold-400 font-serif tracking-[0.2em] text-sm hover:bg-gold-400/10 transition-colors disabled:opacity-50"
+          className="px-8 py-3 border border-gold-400/50 text-gold-400 font-mono tracking-[0.2em] text-sm hover:bg-gold-400/10 transition-colors disabled:opacity-50"
         >
-          {isMinting ? "VERIFYING SIGNATURE..." : "MINT TRUST ANCHOR"}
+          {isMinting ? "VERIFYING..." : "VERIFY SECURITY KEY"}
         </button>
       </div>
     );
@@ -184,7 +184,7 @@ export default function DashboardPage() {
                     : "text-zinc-500 hover:text-zinc-300"
                 }`}
               >
-                {tab}
+                {tab === "security" ? "Access Control" : tab}
               </button>
             ))}
           </nav>

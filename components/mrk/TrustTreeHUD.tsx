@@ -161,26 +161,26 @@ export const TrustTreeHUD = ({ engine, originHash, onRevoke, onEmitInvite }: Tru
       <div className="flex items-center justify-between mb-8">
         <div>
           <h3 className="font-serif text-sm tracking-[0.3em] text-gold-400 uppercase">
-            Sovereign Trust Chain
+            Authentication Network
           </h3>
           <p className="font-mono text-[10px] tracking-wider text-gold-500/30 mt-1">
-            {cohortStats.totalOrigins} ORIGINS · {cohortStats.totalTrustKeys} KEYS · {cohortStats.totalSubKeys} SUB-KEYS
+            {cohortStats.totalOrigins} SECURITY KEYS · {cohortStats.totalTrustKeys} DELEGATES
           </p>
         </div>
         <div className="flex gap-3">
           <button
             onClick={onEmitInvite}
-            className="px-4 py-2 border border-gold-500/30 text-gold-400 font-serif text-xs tracking-[0.2em] uppercase hover:bg-gold-500/10 transition-all duration-300"
+            className="px-4 py-2 border border-gold-500/30 text-gold-400 font-mono text-[10px] tracking-[0.2em] uppercase hover:bg-gold-500/10 transition-all duration-300"
           >
-            Emit Trust Key
+            Add Delegate
           </button>
           {selectedNode && selectedNode !== originHash && (
             <button
               onClick={() => handleRevoke(selectedNode)}
               disabled={isRevoking}
-              className="px-4 py-2 border border-red-500/30 text-red-400 font-serif text-xs tracking-[0.2em] uppercase hover:bg-red-500/10 transition-all duration-300 disabled:opacity-30"
+              className="px-4 py-2 border border-red-500/30 text-red-400 font-mono text-[10px] tracking-[0.2em] uppercase hover:bg-red-500/10 transition-all duration-300 disabled:opacity-30"
             >
-              Sever Chain
+              Revoke Key
             </button>
           )}
         </div>
@@ -224,10 +224,10 @@ export const TrustTreeHUD = ({ engine, originHash, onRevoke, onEmitInvite }: Tru
               transition={{ duration: 1, repeat: Infinity }}
             />
             <span className="font-mono text-[10px] tracking-wider text-red-400 uppercase">
-              Propagating Revocation to Global Edge Nodes
+              Revoking Access on Edge Nodes
             </span>
             <span className="font-mono text-[10px] text-red-500/60">
-              {purgingNodes.size} NODES SEVERING
+              {purgingNodes.size} KEYS DEACTIVATING
             </span>
           </motion.div>
         )}

@@ -38,7 +38,7 @@ export const VelocityGraph = ({ engine, refreshIntervalMs = 5000 }: VelocityGrap
     <div className="relative bg-navy-950/80 backdrop-blur-xl border border-gold-500/10 rounded-2xl p-8 shadow-imperial">
       <div className="flex items-center justify-between mb-8">
         <h3 className="font-serif text-sm tracking-[0.3em] text-gold-400 uppercase">
-          Global Handshake Velocity
+          Traffic Analytics
         </h3>
         <div className="flex gap-2">
           {(['1m', '5m', '15m', '1h', '24h'] as const).map(window => (
@@ -114,7 +114,7 @@ export const VelocityGraph = ({ engine, refreshIntervalMs = 5000 }: VelocityGrap
 
       {currentVelocity && (
         <div className="grid grid-cols-4 gap-4">
-          <MetricTile label="Handshakes" value={currentVelocity.totalHandshakes.toLocaleString()} />
+          <MetricTile label="Total Clicks" value={currentVelocity.totalHandshakes.toLocaleString()} />
           <MetricTile label="Resolved Rate" value={`${(currentVelocity.resolvedRate * 100).toFixed(1)}%`} />
           <MetricTile label="Avg Latency" value={`${currentVelocity.avgLatencyMs.toFixed(1)}ms`} />
           <MetricTile 
@@ -128,7 +128,7 @@ export const VelocityGraph = ({ engine, refreshIntervalMs = 5000 }: VelocityGrap
       {!currentVelocity && (
         <div className="flex items-center justify-center h-48">
           <p className="font-serif text-xs tracking-[0.2em] text-gold-500/30 uppercase">
-            Awaiting Handshake Data
+            Waiting for Traffic Data
           </p>
         </div>
       )}

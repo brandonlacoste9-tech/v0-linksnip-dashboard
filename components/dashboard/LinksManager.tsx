@@ -73,13 +73,13 @@ export function LinksManager() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="bg-zinc-950 border-zinc-800 shadow-xl">
           <CardHeader className="pb-2">
-            <CardDescription className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Total Sovereign Links</CardDescription>
+            <CardDescription className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Total Short Links</CardDescription>
             <CardTitle className="text-3xl font-black text-amber-500">{links.length}</CardTitle>
           </CardHeader>
         </Card>
         <Card className="bg-zinc-950 border-zinc-800 shadow-xl">
           <CardHeader className="pb-2">
-            <CardDescription className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Total Handshakes</CardDescription>
+            <CardDescription className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Total Clicks</CardDescription>
             <CardTitle className="text-3xl font-black text-amber-500">
               {links.reduce((acc, curr) => acc + curr.clicks, 0).toLocaleString()}
             </CardTitle>
@@ -97,8 +97,8 @@ export function LinksManager() {
       <Card className="bg-zinc-950 border-zinc-800 shadow-2xl overflow-hidden relative">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500/0 via-amber-500 to-amber-500/0 opacity-30" />
         <CardHeader>
-          <CardTitle className="text-amber-50 font-serif tracking-wider uppercase text-sm">Mint New Sovereign Link</CardTitle>
-          <CardDescription className="text-zinc-500">Shorten and secure any URL across the Mark Protocol network.</CardDescription>
+          <CardTitle className="text-amber-50 font-serif tracking-wider uppercase text-sm">Create New Link</CardTitle>
+          <CardDescription className="text-zinc-500">Shorten and track any URL with LinkSnip.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleCreate} className="flex flex-col md:flex-row gap-4">
@@ -122,7 +122,7 @@ export function LinksManager() {
               disabled={isCreating || !newUrl}
               className="bg-amber-600 hover:bg-amber-700 text-black font-black uppercase tracking-widest h-12 px-8"
             >
-              {isCreating ? "Minting..." : "Mint Link"}
+              {isCreating ? "Creating..." : "Create Link"}
               <Plus className="w-4 h-4 ml-2" />
             </Button>
           </form>
@@ -150,19 +150,19 @@ export function LinksManager() {
           <div className="rounded-md border border-zinc-800">
             <Table>
               <TableHeader className="bg-zinc-900/50">
-                <TableRow className="border-zinc-800 hover:bg-transparent">
-                  <TableHead className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Sovereign Link</TableHead>
-                  <TableHead className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Destination</TableHead>
-                  <TableHead className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest text-center">Handshakes</TableHead>
-                  <TableHead className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest text-right">Actions</TableHead>
-                </TableRow>
+                  <TableRow className="border-zinc-800 hover:bg-transparent">
+                    <TableHead className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Short Link</TableHead>
+                    <TableHead className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest">Destination</TableHead>
+                    <TableHead className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest text-center">Clicks</TableHead>
+                    <TableHead className="text-zinc-500 font-mono text-[10px] uppercase tracking-widest text-right">Actions</TableHead>
+                  </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading ? (
                   <TableRow>
                     <TableCell colSpan={4} className="h-32 text-center">
                       <div className="flex items-center justify-center gap-2 text-zinc-500 animate-pulse font-mono text-[10px] uppercase tracking-widest">
-                        Decrypting Vault...
+                        Loading Data...
                       </div>
                     </TableCell>
                   </TableRow>
