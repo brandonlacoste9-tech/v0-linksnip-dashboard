@@ -196,7 +196,7 @@ export default function DashboardPage() {
           </div>
           
           <div className="p-8 flex justify-center">
-            <SentinelShield state={liveClicks.length > 0 ? 'resolved' : 'evaluating'} threatLevel={0.12} />
+            <SentinelShield state={liveClicks.length > 0 ? 'resolved' : 'evaluating'} />
           </div>
 
           <div className="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar border-t border-white/5">
