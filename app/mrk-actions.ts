@@ -37,6 +37,10 @@ export async function getTrustTreeAction(originHash: string): Promise<TrustAncho
   return serverEngine.getTrustTree(originHash);
 }
 
+import crypto from "crypto";
+import { cookies } from "next/headers";
+import { generateRegistrationOptions, verifyRegistrationResponse } from '@simplewebauthn/server';
+
 export async function getAnonymizedCohortStatsAction() {
   // Self-healing database mechanism for production Vercel environments
   try {
@@ -79,6 +83,67 @@ export async function getAnonymizedCohortStatsAction() {
   }
 
   return serverEngine.getAnonymizedCohortStats();
+}
+
+export async function generateWebAuthnOptionsAction(username: string) {
+  // Using a deterministic ID for demo purposes; normally this is the Clerk user ID
+  const userId = "user_" + Buffer.from(username).toString("hex").substring(0, 16);
+  
+  const options = await generateRegistrationOptions({
+    rpName: 'Mark Protocol Sovereign Vault',
+    rpID: process.env.NODE_ENV === 'development' ? 'localhost' : 'v0-linksnip-dashboard.vercel.app',
+    userID: new Uint8Array(new TextEncoder().encode(userId)),
+    userName: username,
+    attestationType: 'none',
+    authenticatorSelection: {
+      residentKey: 'required',
+      userVerification: 'required',
+    },
+  });
+
+  // Save challenge securely in HttpOnly cookie to verify later
+  const cookieStore = await cookies();
+  cookieStore.set("webauthn_challenge", options.challenge, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV !== "development",
+    sameSite: "lax",
+    maxAge: 60 * 5, // 5 minutes
+  });
+
+  return options;
+}
+
+export async function verifyWebAuthnRegistrationAction(attResp: any) {
+  const cookieStore = await cookies();
+  const expectedChallenge = cookieStore.get("webauthn_challenge")?.value;
+
+  if (!expectedChallenge) {
+    throw new Error("Challenge expired. Please try again.");
+  }
+
+  const verification = await verifyRegistrationResponse({
+    response: attResp,
+    expectedChallenge,
+    expectedOrigin: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://v0-linksnip-dashboard.vercel.app',
+    expectedRPID: process.env.NODE_ENV === 'development' ? 'localhost' : 'v0-linksnip-dashboard.vercel.app',
+  });
+
+  if (verification.verified && verification.registrationInfo) {
+    const { credential } = verification.registrationInfo;
+    const credentialIdStr = Buffer.from(credential.id).toString('base64url');
+    
+    // Clear challenge
+    cookieStore.delete("webauthn_challenge");
+
+    // Mint the Trust Anchor using the verified credential
+    // Create a 64-char origin hash based on the credential ID
+    const originHash = crypto.createHash('sha256').update(credentialIdStr).digest('hex');
+    await serverEngine.mintOriginAnchor(originHash, credentialIdStr);
+
+    return { verified: true, originHash };
+  }
+
+  throw new Error("Biometric signature failed verification.");
 }
 
 export async function mintOriginAnchorAction(
