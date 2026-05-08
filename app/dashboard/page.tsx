@@ -14,7 +14,8 @@ import {
   getAnonymizedCohortStatsAction,
   mintOriginAnchorAction,
   generateWebAuthnOptionsAction,
-  verifyWebAuthnRegistrationAction
+  verifyWebAuthnRegistrationAction,
+  getHandshakeEventsAction
 } from "@/app/mrk-actions";
 
 // Singleton engine for intelligence (purely in-memory on client for now)
@@ -53,9 +54,18 @@ export default function DashboardPage() {
 
     const initEngine = async () => {
       try {
-        // Trigger self-healing migration and check stats
+        // 1. Self-healing migration
         await trustEngine.getAnonymizedCohortStats();
-        // Strict Mode: No longer bypassing. The user MUST mint their own anchor via WebAuthn.
+        
+        // 2. Check for persisted session
+        const savedHash = document.cookie.split("; ").find(row => row.startsWith("mrk_origin_hash="))?.split("=")[1];
+        if (savedHash) {
+          setOriginHash(savedHash);
+        }
+
+        // 3. Fetch REAL handshake data from the database to populate the graph
+        const recentEvents = await getHandshakeEventsAction();
+        recentEvents.forEach(ev => aggregationEngine.ingestEvent(ev));
       } catch (err: any) {
         console.error("Failed to initialize Imperial Console:", err);
         setOriginHash("ERROR: " + err.message);
@@ -63,45 +73,19 @@ export default function DashboardPage() {
     };
 
     initEngine();
-
-    // Simulate incoming handshake events for demo velocity graph
-    const interval = setInterval(() => {
-      aggregationEngine.ingestEvent({
-        eventId: crypto.randomUUID(),
-        timestamp: Date.now(),
-        identityHash: Array.from({ length: 64 }, () =>
-          Math.floor(Math.random() * 16).toString(16)
-        ).join(""),
-        saltWindowId: Math.floor(Date.now() / (24 * 60 * 60 * 1000)),
-        trustDepth: Math.floor(Math.random() * 3),
-        linkTier: "classified",
-        geoRegion: ["NA", "EU", "AS", "OC", "UNKNOWN"][Math.floor(Math.random() * 5)],
-        authMethod: "webauthn",
-        outcome: ["resolved", "resolved", "resolved", "locked", "defending"][
-          Math.floor(Math.random() * 5)
-        ] as any,
-        latencyMs: Math.random() * 15 + 3,
-        threatFlags: [],
-      });
-    }, 3000);
-
-    return () => clearInterval(interval);
   }, []);
 
   const handleBiometricEnrollment = async () => {
     setIsMinting(true);
     try {
-      // 1. Get options from server
       const options = await generateWebAuthnOptionsAction("mrk-admin");
-      
-      // 2. Prompt user biometrics
       const attResp = await startRegistration({ optionsJSON: options });
-      
-      // 3. Verify response on server and mint anchor
       const result = await verifyWebAuthnRegistrationAction(attResp);
       
       if (result.verified) {
         setOriginHash(result.originHash);
+        // Persist the session for 24 hours
+        document.cookie = `mrk_origin_hash=${result.originHash}; path=/; max-age=${60 * 60 * 24}; SameSite=Lax`;
       }
     } catch (err: any) {
       console.error(err);

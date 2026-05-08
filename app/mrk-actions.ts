@@ -1,9 +1,10 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { sql } from "drizzle-orm";
+import { sql, desc } from "drizzle-orm";
 import { TrustDelegationEngineServer } from "@/lib/mrk/trust/TrustDelegationEngineServer";
 import { TrustAnchor, DelegationInvite, RevocationEvent } from "@/lib/mrk/trust/TrustDelegationEngine";
+import { clicks } from "@/lib/db/schema";
 
 const serverEngine = new TrustDelegationEngineServer();
 
@@ -144,6 +145,24 @@ export async function verifyWebAuthnRegistrationAction(attResp: any) {
   }
 
   throw new Error("Biometric signature failed verification.");
+}
+
+export async function getHandshakeEventsAction() {
+  const recentClicks = await db.select().from(clicks).orderBy(desc(clicks.createdAt)).limit(100);
+  
+  return recentClicks.map(click => ({
+    eventId: String(click.id),
+    timestamp: click.createdAt.getTime(),
+    identityHash: click.visitorHash || "anonymous",
+    saltWindowId: Math.floor(click.createdAt.getTime() / (24 * 60 * 60 * 1000)),
+    trustDepth: 0,
+    linkTier: "standard",
+    geoRegion: click.country || "UNKNOWN",
+    authMethod: "browser",
+    outcome: "resolved" as const,
+    latencyMs: 12.4,
+    threatFlags: [],
+  }));
 }
 
 export async function mintOriginAnchorAction(
