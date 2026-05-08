@@ -174,7 +174,7 @@ export default clerkMiddleware(async (auth, request) => {
   const { pathname } = request.nextUrl;
 
   // 1. GHOST VAULT (Stateless Identity Decoupling)
-  const ip = request.ip || request.headers.get("x-forwarded-for") || "0.0.0.0";
+  const ip = request.headers.get("x-forwarded-for") || "0.0.0.0";
   const userAgent = request.headers.get("user-agent") || "unknown";
   const ghostHash = await AggregationEngine.generateGhostHash(ip, userAgent);
 
