@@ -153,12 +153,15 @@ export async function getHandshakeEventsAction() {
   return recentClicks.map(click => ({
     eventId: String(click.id),
     timestamp: click.createdAt.getTime(),
-    identityHash: click.visitorHash || "anonymous",
+    // Ensure identityHash is a valid 64-char hex string
+    identityHash: click.visitorHash && /^[a-f0-9]{64}$/.test(click.visitorHash) 
+      ? click.visitorHash 
+      : "0000000000000000000000000000000000000000000000000000000000000000",
     saltWindowId: Math.floor(click.createdAt.getTime() / (24 * 60 * 60 * 1000)),
     trustDepth: 0,
-    linkTier: "standard",
-    geoRegion: click.country || "UNKNOWN",
-    authMethod: "browser",
+    linkTier: "public" as const,
+    geoRegion: "UNKNOWN" as const,
+    authMethod: "none" as const,
     outcome: "resolved" as const,
     latencyMs: 12.4,
     threatFlags: [],
