@@ -3,7 +3,7 @@
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
 import { db } from '@/lib/db'
-import { links, clicks, authorizedUsers } from '@/lib/db/schema'
+import { links, clicks, authorizedUsers, bridgeTokens } from '@/lib/db/schema'
 import { eq, desc, sql, gte, lte, and } from 'drizzle-orm'
 import { headers } from 'next/headers'
 import { unstable_cacheLife as cacheLife, unstable_cacheTag as cacheTag } from 'next/cache'
