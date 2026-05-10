@@ -335,4 +335,3 @@ export function BridgeManager() {
     </div>
   );
 }
-}
