@@ -1,6 +1,6 @@
 "use client"
 
-import { SignInButton, UserButton } from "@clerk/nextjs";
+import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { ArrowRight, Link2, Shield, Zap, CheckCircle2, Banknote, X, Check, Globe, Coins, Lock, ChevronRight, Loader2, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -78,26 +78,26 @@ export default function LandingContent({ userId }: { userId: string | null }) {
               {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </Button>
 
-            {!userId && (
-              <>
-                <SignInButton mode="modal" forceRedirectUrl="/dashboard">
-                  <Button variant="ghost" className="text-amber-100 hover:text-amber-400 hover:bg-amber-950/50">
-                    {t.nav.signIn}
-                  </Button>
-                </SignInButton>
-                <Button variant="outline" className="hidden border-amber-700/50 text-amber-100 sm:inline-flex" asChild>
-                  <Link href="/sign-up">Sign up</Link>
+            <Show when="signed-out">
+              <SignInButton mode="modal" forceRedirectUrl="/dashboard">
+                <Button variant="ghost" className="text-amber-100 hover:text-amber-400 hover:bg-amber-950/50">
+                  {t.nav.signIn}
                 </Button>
-              </>
-            )}
-            {userId && (
+              </SignInButton>
+              <SignUpButton mode="modal" forceRedirectUrl="/dashboard">
+                <Button variant="outline" className="border-amber-700/50 text-amber-100 hover:bg-amber-950/40">
+                  Sign up
+                </Button>
+              </SignUpButton>
+            </Show>
+            <Show when="signed-in">
               <div className="flex items-center gap-4">
                 <Link href="/dashboard" className="text-sm font-medium text-amber-100 hover:text-amber-400 transition-colors">
                   {t.nav.dashboard}
                 </Link>
                 <UserButton />
               </div>
-            )}
+            </Show>
           </div>
         </div>
       </nav>

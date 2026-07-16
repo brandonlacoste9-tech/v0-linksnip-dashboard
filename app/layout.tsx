@@ -94,6 +94,7 @@ export const viewport: Viewport = {
 }
 
 import { ClerkProvider } from '@clerk/nextjs'
+import { shadcn } from '@clerk/ui/themes'
 
 export default function RootLayout({
   children,
@@ -103,22 +104,23 @@ export default function RootLayout({
   const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 
   return (
-    <ClerkProvider
-      publishableKey={publishableKey}
-      signInUrl="/sign-in"
-      signUpUrl="/sign-up"
-      afterSignOutUrl="/"
-    >
-      <html lang="en" suppressHydrationWarning>
-        <body className={`${spaceGrotesk.variable} ${inter.variable} font-sans antialiased`}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${spaceGrotesk.variable} ${inter.variable} font-sans antialiased`}>
+        <ClerkProvider
+          publishableKey={publishableKey}
+          signInUrl="/sign-in"
+          signUpUrl="/sign-up"
+          afterSignOutUrl="/"
+          appearance={{ theme: shadcn }}
+        >
           <LanguageProvider>
             <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
               {children}
             </ThemeProvider>
           </LanguageProvider>
           {process.env.NODE_ENV === 'production' && <Analytics />}
-        </body>
-      </html>
-    </ClerkProvider>
+        </ClerkProvider>
+      </body>
+    </html>
   )
 }
