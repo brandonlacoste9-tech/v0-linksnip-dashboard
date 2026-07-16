@@ -79,11 +79,16 @@ export default function LandingContent({ userId }: { userId: string | null }) {
             </Button>
 
             {!userId && (
-              <SignInButton mode="modal">
-                <Button variant="ghost" className="text-amber-100 hover:text-amber-400 hover:bg-amber-950/50">
-                  {t.nav.signIn}
+              <>
+                <SignInButton mode="modal" forceRedirectUrl="/dashboard">
+                  <Button variant="ghost" className="text-amber-100 hover:text-amber-400 hover:bg-amber-950/50">
+                    {t.nav.signIn}
+                  </Button>
+                </SignInButton>
+                <Button variant="outline" className="hidden border-amber-700/50 text-amber-100 sm:inline-flex" asChild>
+                  <Link href="/sign-up">Sign up</Link>
                 </Button>
-              </SignInButton>
+              </>
             )}
             {userId && (
               <div className="flex items-center gap-4">
@@ -122,7 +127,7 @@ export default function LandingContent({ userId }: { userId: string | null }) {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             {!userId && (
-              <SignInButton mode="modal">
+              <SignInButton mode="modal" forceRedirectUrl="/dashboard">
                 <Button size="lg" className="h-14 px-8 text-lg bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800 text-white border-0 shadow-[0_0_40px_-10px_rgba(245,158,11,0.5)] transition-all font-bold">
                   {t.hero.cta}
                   <ArrowRight className="w-5 h-5 ml-2" />

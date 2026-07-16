@@ -56,6 +56,7 @@ const SYSTEM_ROUTES = new Set([
   "/", "/about", "/pricing", "/features", "/blog", "/careers", "/contact",
   "/customers", "/domains", "/privacy", "/terms", "/security", "/cookie-policy",
   "/dpa", "/success", "/analytics", "/sitemap.xml", "/robots.txt",
+  "/sign-in", "/sign-up",
 ]);
 
 function isSystemRoute(pathname: string): boolean {
@@ -68,6 +69,8 @@ function isSystemRoute(pathname: string): boolean {
     pathname.startsWith("/_next/") ||
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/bridge") ||
+    pathname.startsWith("/sign-in") ||
+    pathname.startsWith("/sign-up") ||
     pathname.includes(".")
   ) {
     return true;
